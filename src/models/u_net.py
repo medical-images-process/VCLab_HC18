@@ -2,7 +2,7 @@ from keras.utils import multi_gpu_model
 from keras.models import Model
 from keras.layers import Input, concatenate, Conv2D, Dense, MaxPooling2D, Activation, UpSampling2D, BatchNormalization
 from keras.optimizers import RMSprop
-from models import losses
+from src.models import losses
 import keras as K
 import numpy as np
 
