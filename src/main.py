@@ -12,7 +12,7 @@ def main(argv):
     ###############################
     # training parameter
     num_epochs = 100
-    batch_size = 64
+    batch_size = 8
     num_workers = 4
     shuffle = False
     num_training_samples = 999
@@ -47,7 +47,7 @@ def main(argv):
     model.fit_generator(generator=training_generator,
               steps_per_epoch=num_training_samples / batch_size,
               epochs=num_epochs,
-              verbose=1,
+              verbose=2,
               shuffle=shuffle)
 
 
