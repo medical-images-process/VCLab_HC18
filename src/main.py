@@ -1,9 +1,8 @@
 import os
 import sys
-import keras
 
-from src.models.u_net import get_unet_512
 from src.dataLoader import DataGenerator
+from src.models.u_net import get_advanced_unet_512 as get_unet
 
 
 def main(argv):
@@ -34,35 +33,31 @@ def main(argv):
     training_generator = DataGenerator(csv_file=train_csv, root_dir=os.path.join(train_dataset_dir, 'set'),
                                              batch_size= batch_size, transform=imager_transformer)
 
+
     ###############################
     # Start learning              #
     ###############################
 
     # load model
     print("load model")
-    model = get_unet_512()
+    model_template, model = get_unet()
 
     # train model
     print("train model")
     model.fit_generator(generator=training_generator,
               steps_per_epoch=num_training_samples / batch_size,
               epochs=num_epochs,
-              verbose=2,
+              verbose=1,
               shuffle=shuffle)
 
+    # Save model via the template model (which shares the same weights):
+    model_template.save(model_path)
+    print("Saved model to disk")
 
     # evaluate the model
     print("evaluate model")
     scores = model.evaluate_generator(training_generator, num_training_samples/batch_size, workers=num_workers)
     print("%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
-
-    # serialize model to JSON
-    model_json = model.to_json()
-    with open("model.json", "w") as json_file:
-        json_file.write(model_json)
-    # serialize weights to HDF5
-    model.save_weights(model_path)
-    print("Saved model to disk")
 
 
 
