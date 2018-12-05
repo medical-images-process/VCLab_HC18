@@ -25,7 +25,7 @@ def main(argv):
     num_epochs = 100
     batch_size = 8
     num_workers = 4
-    shuffle = True
+    shuffle = False
     #num_training_samples = int(len(pd.read_csv(csv_file)))
     num_training_samples = 16
     trainings_split = 0.5
