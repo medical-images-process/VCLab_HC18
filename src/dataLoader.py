@@ -1,8 +1,11 @@
-from skimage import io, transform, color
 import os
 import keras
-import pandas as pd
 import numpy as np
+import pandas as pd
+
+from skimage import io, transform, color
+
+
 class DataGenerator(keras.utils.Sequence):
     def __init__(self, csv_file, root_dir, batch_size, transform=None, output_size=512):
         """
@@ -39,9 +42,7 @@ class DataGenerator(keras.utils.Sequence):
         # batch_hc to numpy array
         HC = np.array(batch_hc)
 
-        # X = self.image_transformer(io.imread(os.path.join(self.root_dir, self.hc_frame.iloc[idx, 0])))
-        # Y = self.image_transformer(io.imread(os.path.join(self.root_dir, self.hc_frame.iloc[idx, 0].replace('.png', '_Annotation.png'))))
-        return X, Y
+        return X, [Y,HC]
 
     # transformer for image augmentation
     def image_transformer(self, image):
