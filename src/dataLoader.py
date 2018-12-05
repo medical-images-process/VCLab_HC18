@@ -7,7 +7,7 @@ from skimage import io, transform, color
 
 
 class DataGenerator(keras.utils.Sequence):
-    def __init__(self, csv_file, root_dir, batch_size, transform=None, output_size=512):
+    def __init__(self, csv_file, root_dir, batch_size, transform=None, shuffle=False):
         """
         Args:
             csv_file (string): Path to the csv file with annotations.
@@ -19,18 +19,34 @@ class DataGenerator(keras.utils.Sequence):
         self.root_dir = root_dir
         self.batch_size = batch_size
         self.transform = transform
-
+        self.shuffle = shuffle
+        self.on_epoch_end()
 
     def __len__(self):
-        return len(self.hc_frame)
+        return int(np.floor(len(self.hc_frame) / self.batch_size))
 
-    def __getitem__(self, idx):
-        batch_x = self.hc_frame.iloc[idx * self.batch_size:(idx + 1) * self.batch_size, 0]
-        batch_y = self.hc_frame.iloc[idx * self.batch_size:(idx + 1) * self.batch_size, 0].str.replace('.png', '_Annotation.png')
+    def __getitem__(self, index):
+          'Generate one batch of data'
+          # Generate indexes of the batch
+          indexes = self.indexes[index*self.batch_size:(index+1)*self.batch_size]
+
+          # Generate data
+          X, Y = self.__data_generation(indexes)
+
+          return X,Y
+
+    def on_epoch_end(self):
+        'Updates indexes after each epoch'
+        self.indexes = np.arange(len(self.hc_frame))
+        if self.shuffle == True:
+            np.random.shuffle(self.indexes)
+
+    def __data_generation(self, list_idx):
+        batch_x = self.hc_frame.iloc[list_idx,0]
+        batch_y = self.hc_frame.iloc[list_idx,0].str.replace('.png', '_Annotation.png')
 
         # head circumference in pixel = head circumference (mm) // pixel_size(mm)
-        batch_hc = self.hc_frame.iloc[idx * self.batch_size:(idx + 1) * self.batch_size, 2] // \
-                   self.hc_frame.iloc[idx * self.batch_size:(idx + 1) * self.batch_size, 1]
+        batch_hc = self.hc_frame.iloc[list_idx,2] // self.hc_frame.iloc[list_idx,1]
 
         # read input image x
         X = np.array([self.image_transformer(
@@ -42,7 +58,7 @@ class DataGenerator(keras.utils.Sequence):
         # batch_hc to numpy array
         HC = np.array(batch_hc)
 
-        return X, [Y,HC]
+        return X, [Y, HC]
 
     # transformer for image augmentation
     def image_transformer(self, image):
@@ -50,7 +66,6 @@ class DataGenerator(keras.utils.Sequence):
         if 'reshape' in self.transform.keys():
             image = self.reshape(image, self.transform['reshape'])
         return image
-
 
     def reshape(self, img, output_size):
         assert isinstance(output_size, (int, tuple))

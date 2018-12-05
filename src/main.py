@@ -31,7 +31,7 @@ def main(argv):
     print("load dataset")
     imager_transformer = {'reshape': 512}
     training_generator = DataGenerator(csv_file=train_csv, root_dir=os.path.join(train_dataset_dir, 'set'),
-                                             batch_size= batch_size, transform=imager_transformer)
+                                             batch_size= batch_size, transform=imager_transformer, shuffle=shuffle)
 
 
     ###############################
