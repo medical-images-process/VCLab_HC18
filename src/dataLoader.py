@@ -7,7 +7,7 @@ from skimage import io, transform, color
 
 
 class DataGenerator(keras.utils.Sequence):
-    def __init__(self, csv_file, root_dir, batch_size, transform=None, shuffle=False):
+    def __init__(self, list_IDs, csv_file, root_dir, batch_size, transform=None, shuffle=False):
         """
         Args:
             csv_file (string): Path to the csv file with annotations.
@@ -16,6 +16,7 @@ class DataGenerator(keras.utils.Sequence):
                 on a sample.
         """
         self.hc_frame = pd.read_csv(csv_file)
+        self.list_IDs = list_IDs
         self.root_dir = root_dir
         self.batch_size = batch_size
         self.transform = transform
@@ -23,15 +24,18 @@ class DataGenerator(keras.utils.Sequence):
         self.on_epoch_end()
 
     def __len__(self):
-        return int(np.floor(len(self.hc_frame) / self.batch_size))
+        return int(np.floor(len(self.list_IDs) / self.batch_size))
 
     def __getitem__(self, index):
           'Generate one batch of data'
           # Generate indexes of the batch
           indexes = self.indexes[index*self.batch_size:(index+1)*self.batch_size]
 
+          # Find list of IDs
+          list_IDs_temp = [self.list_IDs[k] for k in indexes]
+
           # Generate data
-          X, Y = self.__data_generation(indexes)
+          X, Y = self.__data_generation(list_IDs_temp)
 
           return X,Y
 
