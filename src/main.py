@@ -13,7 +13,7 @@ def main(argv):
     num_epochs = 100
     batch_size = 8
     num_workers = 4
-    shuffle = False
+    shuffle = True
     num_training_samples = 999
 
     # paths
