@@ -1,6 +1,7 @@
 import os
 import sys
 
+from keras.callbacks import ModelCheckpoint
 from src.dataLoader import DataGenerator
 from src.models.u_net import get_advanced_unet_512 as get_unet
 
@@ -31,7 +32,7 @@ def main(argv):
     print("load dataset")
     imager_transformer = {'reshape': 512}
     training_generator = DataGenerator(csv_file=train_csv, root_dir=os.path.join(train_dataset_dir, 'set'),
-                                             batch_size= batch_size, transform=imager_transformer)
+                                             batch_size= batch_size, transform=imager_transformer, shuffle=shuffle)
 
 
     ###############################
@@ -42,11 +43,17 @@ def main(argv):
     print("load model")
     model_template, model = get_unet()
 
+    # checkpoint
+    file = "saved_models/checkpoints/ckp.hdf5"
+    checkpoint = ModelCheckpoint(filepath=file, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
+    callback_list = [checkpoint]
+
     # train model
     print("train model")
     model.fit_generator(generator=training_generator,
               steps_per_epoch=num_training_samples / batch_size,
               epochs=num_epochs,
+              callbacks=callback_list,
               verbose=1,
               shuffle=shuffle)
 
