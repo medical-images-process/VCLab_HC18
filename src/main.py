@@ -14,7 +14,7 @@ def main(argv):
     ###############################
     # paths
     train_dataset_dir = os.path.join(os.getcwd(),"Dataset", "training")
-    csv_file = os.path.join(train_dataset_dir, 'training_set_pixel_size_and_HC.csv')
+    csv_file = os.path.join(train_dataset_dir, 'training.csv')
 
     test_dataset_dir = os.path.join(os.getcwd(), 'Dataset/test')
     test_csv = os.path.join(train_dataset_dir, 'test_set_pixel_size.csv')
@@ -54,6 +54,8 @@ def main(argv):
     # load model
     print("load model")
     model_template, model = get_unet()
+
+    model.summary()
 
     # checkpoint
     file = "saved_models/checkpoints/ckp-{epoch:02d}-{val_acc:.2f}.hdf5"

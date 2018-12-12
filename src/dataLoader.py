@@ -49,20 +49,40 @@ class DataGenerator(keras.utils.Sequence):
         batch_x = self.hc_frame.iloc[list_idx,0]
         batch_y = self.hc_frame.iloc[list_idx,0].str.replace('.png', '_Annotation.png')
 
-        # head circumference in pixel = head circumference (mm) // pixel_size(mm)
-        batch_hc = self.hc_frame.iloc[list_idx,2] // self.hc_frame.iloc[list_idx,1]
+        # original head circumference in pixel = head circumference (mm) // pixel_size(mm)
+        #batch_hc = self.hc_frame.iloc[list_idx,2] / self.hc_frame.iloc[list_idx,1]
+        # calculated head circumference in pixel =  head circumference (mm) // pixel_size(mm)
+        batch_hc = self.hc_frame.iloc[list_idx, 8] / self.hc_frame.iloc[list_idx,1]
+
+        # center_x_pixel = center_x_mm / pixel_mm
+        batch_center_x= self.hc_frame.iloc[list_idx, 3] / self.hc_frame.iloc[list_idx, 1]
+        # center_y_pixel = center_y_mm / pixel_mm
+        batch_center_y = self.hc_frame.iloc[list_idx, 4] / self.hc_frame.iloc[list_idx, 1]
+
+        # semi_a_pixel = semi_a_mm/ pixel_mm
+        batch_a = self.hc_frame.iloc[list_idx, 5] / self.hc_frame.iloc[list_idx, 1]
+        # semi_b_pixel = semi_b_mm/ pixel_mm
+        batch_b = self.hc_frame.iloc[list_idx, 6] / self.hc_frame.iloc[list_idx, 1]
+
+        # angle_rad
+        batch_angle = self.hc_frame.iloc[list_idx, 7]
 
         # read input image x
         X = np.array([self.image_transformer(
-            color.gray2rgb(io.imread(os.path.join(self.root_dir, file_name)))) for file_name in batch_x])
+            np.expand_dims(io.imread(os.path.join(self.root_dir, file_name)), axis=3)) for file_name in batch_x])
         # read output image y
         Y = np.array([self.image_transformer(
-            color.gray2rgb(io.imread(os.path.join(self.root_dir, file_name)))) for file_name in batch_y])
+            np.expand_dims(io.imread(os.path.join(self.root_dir, file_name)), axis=3)) for file_name in batch_y])
 
-        # batch_hc to numpy array
-        HC = np.array(batch_hc)
-
-        return X, [Y, HC]
+        # Ellipse parameter to numpy array
+        CX = np.transpose(np.array([batch_center_x]))
+        CY = np.transpose(np.array([batch_center_y]))
+        A = np.transpose(np.array([batch_a]))
+        B = np.transpose(np.array([batch_b]))
+        AN = np.transpose(np.array([batch_angle]))
+        HC = np.transpose(np.array([batch_hc]))
+        #ELPAR = np.transpose(np.array([batch_center_x, batch_center_y, batch_a, batch_b, batch_angle, batch_hc,]))
+        return X, [Y, CX, CY, A, B, AN, HC]
 
     # transformer for image augmentation
     def image_transformer(self, image):
