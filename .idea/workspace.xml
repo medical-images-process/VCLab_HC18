@@ -493,7 +493,14 @@
       <option name="project" value="LOCAL" />
       <updated>1546938015083</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="extract ellipse parameter + tune model architecture">
+      <created>1546938050677</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1546938050677</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -549,11 +556,11 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Test git" />
-    <MESSAGE value="extract ellipse parameter + tune model architecture" />
     <MESSAGE value="optimize model parameters + learn annotation vs learn distance transform" />
     <MESSAGE value="new images in dataset to learn distance transform" />
     <MESSAGE value="new model architecture" />
-    <option name="LAST_COMMIT_MESSAGE" value="new model architecture" />
+    <MESSAGE value="extract ellipse parameter + tune model architecture" />
+    <option name="LAST_COMMIT_MESSAGE" value="extract ellipse parameter + tune model architecture" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
