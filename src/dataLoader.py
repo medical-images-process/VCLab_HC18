@@ -3,7 +3,8 @@ import keras
 import numpy as np
 import pandas as pd
 
-from skimage import io, transform, color
+from scipy import ndimage
+from skimage import io, transform
 
 
 class DataGenerator(keras.utils.Sequence):
@@ -47,12 +48,17 @@ class DataGenerator(keras.utils.Sequence):
 
     def __data_generation(self, list_idx):
         batch_x = self.hc_frame.iloc[list_idx,0]
-        batch_y = self.hc_frame.iloc[list_idx,0].str.replace('.png', '_Annotation.png')
+        # Output annotation or distance transformation
+        if 'distanceTransform' in self.transform.keys() and self.transform['distanceTransform']:
+            batch_y = self.hc_frame.iloc[list_idx,0].str.replace('.png', '_DistanceTransform.png')
+            output_mode = 'distanceTransform'
+        else:
+            batch_y = self.hc_frame.iloc[list_idx, 0].str.replace('.png', '_Annotation.png')
+            output_mode = 'annotation'
 
-        # original head circumference in pixel = head circumference (mm) // pixel_size(mm)
-        #batch_hc = self.hc_frame.iloc[list_idx,2] / self.hc_frame.iloc[list_idx,1]
         # calculated head circumference in pixel =  head circumference (mm) // pixel_size(mm)
-        batch_hc = self.hc_frame.iloc[list_idx, 8] / self.hc_frame.iloc[list_idx,1]
+        # normalize hc to [-1,1] choosing 150 as max
+        batch_hc = (self.hc_frame.iloc[list_idx, 8] / self.hc_frame.iloc[list_idx,1] - (75 / self.hc_frame.iloc[list_idx,1])) /  (75 / self.hc_frame.iloc[list_idx,1])
 
         # center_x_pixel = center_x_mm / pixel_mm
         batch_center_x= self.hc_frame.iloc[list_idx, 3] / self.hc_frame.iloc[list_idx, 1]
@@ -65,30 +71,41 @@ class DataGenerator(keras.utils.Sequence):
         batch_b = self.hc_frame.iloc[list_idx, 6] / self.hc_frame.iloc[list_idx, 1]
 
         # angle_rad
-        batch_angle = self.hc_frame.iloc[list_idx, 7]
+        batch_angle= self.hc_frame.iloc[list_idx, 7]
 
         # read input image x
         X = np.array([self.image_transformer(
-            np.expand_dims(io.imread(os.path.join(self.root_dir, file_name)), axis=3)) for file_name in batch_x])
+            np.expand_dims(io.imread(os.path.join(self.root_dir, file_name)), axis=3), 'image') for file_name in batch_x])
         # read output image y
         Y = np.array([self.image_transformer(
-            np.expand_dims(io.imread(os.path.join(self.root_dir, file_name)), axis=3)) for file_name in batch_y])
+            np.expand_dims(io.imread(os.path.join(self.root_dir, file_name)), axis=3), output_mode) for file_name in batch_y])
+
+        # normalize the vars to [-1,1]
+        normelize_center_x =  self.transform['reshape'] if 'reshape' in self.transform.keys() else 400
+        normelize_center_y = self.transform['reshape'] if 'reshape' in self.transform.keys() else 250
+        normelize_semi_a = normelize_center_x
+        normelize_semi_b = normelize_center_x
 
         # Ellipse parameter to numpy array
-        CX = np.transpose(np.array([batch_center_x]))
-        CY = np.transpose(np.array([batch_center_y]))
-        A = np.transpose(np.array([batch_a]))
-        B = np.transpose(np.array([batch_b]))
-        AN = np.transpose(np.array([batch_angle]))
+        CX = np.transpose(np.array([(batch_center_x - normelize_center_x) / normelize_center_x]))
+        CY = np.transpose(np.array([(batch_center_y - normelize_center_y) / normelize_center_y]))
+        A = np.transpose(np.array([(batch_a - normelize_semi_a) / normelize_semi_a]))
+        B = np.transpose(np.array([(batch_b - normelize_semi_b) / normelize_semi_b]))
+        SIN = np.transpose(np.sin(np.array([batch_angle])))
+        COS = np.transpose(np.cos(np.array([batch_angle])))
         HC = np.transpose(np.array([batch_hc]))
-        #ELPAR = np.transpose(np.array([batch_center_x, batch_center_y, batch_a, batch_b, batch_angle, batch_hc,]))
-        return X, [Y, CX, CY, A, B, AN, HC]
+
+        return X, [Y, CX, CY, A, B, SIN, COS, HC]
 
     # transformer for image augmentation
-    def image_transformer(self, image):
+    def image_transformer(self, image, mode):
         # reshape image
         if 'reshape' in self.transform.keys():
             image = self.reshape(image, self.transform['reshape'])
+        # fill ellipse
+        if mode == 'annotation':
+            image = ndimage.binary_fill_holes(image[:, :]).astype(int)
+
         return image
 
     def reshape(self, img, output_size):
