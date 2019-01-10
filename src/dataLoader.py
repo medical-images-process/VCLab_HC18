@@ -28,17 +28,17 @@ class DataGenerator(keras.utils.Sequence):
         return int(np.floor(len(self.list_IDs) / self.batch_size))
 
     def __getitem__(self, index):
-          'Generate one batch of data'
-          # Generate indexes of the batch
-          indexes = self.indexes[index*self.batch_size:(index+1)*self.batch_size]
+        'Generate one batch of data'
+        # Generate indexes of the batch
+        indexes = self.indexes[index * self.batch_size:(index + 1) * self.batch_size]
 
-          # Find list of IDs
-          list_IDs_temp = [self.list_IDs[k] for k in indexes]
+        # Find list of IDs
+        list_IDs_temp = [self.list_IDs[k] for k in indexes]
 
-          # Generate data
-          X, Y = self.__data_generation(list_IDs_temp)
+        # Generate data
+        X, Y = self.__data_generation(list_IDs_temp)
 
-          return X,Y
+        return X, Y
 
     def on_epoch_end(self):
         'Updates indexes after each epoch'
@@ -47,10 +47,10 @@ class DataGenerator(keras.utils.Sequence):
             np.random.shuffle(self.indexes)
 
     def __data_generation(self, list_idx):
-        batch_x = self.hc_frame.iloc[list_idx,0]
+        batch_x = self.hc_frame.iloc[list_idx, 0]
         # Output annotation or distance transformation
         if 'distanceTransform' in self.transform.keys() and self.transform['distanceTransform']:
-            batch_y = self.hc_frame.iloc[list_idx,0].str.replace('.png', '_DistanceTransform.png')
+            batch_y = self.hc_frame.iloc[list_idx, 0].str.replace('.png', '_DistanceTransform.png')
             output_mode = 'distanceTransform'
         else:
             batch_y = self.hc_frame.iloc[list_idx, 0].str.replace('.png', '_Annotation.png')
@@ -58,10 +58,11 @@ class DataGenerator(keras.utils.Sequence):
 
         # calculated head circumference in pixel =  head circumference (mm) // pixel_size(mm)
         # normalize hc to [-1,1] choosing 150 as max
-        batch_hc = (self.hc_frame.iloc[list_idx, 8] / self.hc_frame.iloc[list_idx,1] - (75 / self.hc_frame.iloc[list_idx,1])) /  (75 / self.hc_frame.iloc[list_idx,1])
+        batch_hc = (self.hc_frame.iloc[list_idx, 8] / self.hc_frame.iloc[list_idx, 1] - (
+        75 / self.hc_frame.iloc[list_idx, 1])) / (75 / self.hc_frame.iloc[list_idx, 1])
 
         # center_x_pixel = center_x_mm / pixel_mm
-        batch_center_x= self.hc_frame.iloc[list_idx, 3] / self.hc_frame.iloc[list_idx, 1]
+        batch_center_x = self.hc_frame.iloc[list_idx, 3] / self.hc_frame.iloc[list_idx, 1]
         # center_y_pixel = center_y_mm / pixel_mm
         batch_center_y = self.hc_frame.iloc[list_idx, 4] / self.hc_frame.iloc[list_idx, 1]
 
@@ -71,18 +72,20 @@ class DataGenerator(keras.utils.Sequence):
         batch_b = self.hc_frame.iloc[list_idx, 6] / self.hc_frame.iloc[list_idx, 1]
 
         # angle_rad
-        batch_angle= self.hc_frame.iloc[list_idx, 7]
+        batch_angle = self.hc_frame.iloc[list_idx, 7]
 
         # read input image x
         X = np.array([self.image_transformer(
-            np.expand_dims(io.imread(os.path.join(self.root_dir, file_name)), axis=3), 'image') for file_name in batch_x])
+            np.expand_dims(io.imread(os.path.join(self.root_dir, file_name)), axis=3), 'image') for file_name in
+            batch_x])
         # read output image y
         Y = np.array([self.image_transformer(
-            np.expand_dims(io.imread(os.path.join(self.root_dir, file_name)), axis=3), output_mode) for file_name in batch_y])
+            np.expand_dims(io.imread(os.path.join(self.root_dir, file_name)), axis=3), output_mode) for file_name in
+            batch_y])
 
         # normalize the vars to [-1,1]
-        normelize_center_x =  self.transform['reshape'] if 'reshape' in self.transform.keys() else 400
-        normelize_center_y = self.transform['reshape'] if 'reshape' in self.transform.keys() else 250
+        normelize_center_x = int(self.transform['reshape'][0]/2) if 'reshape' in self.transform.keys() else 400
+        normelize_center_y = int(self.transform['reshape'][1]/2) if 'reshape' in self.transform.keys() else 270
         normelize_semi_a = normelize_center_x
         normelize_semi_b = normelize_center_x
 
@@ -110,18 +113,8 @@ class DataGenerator(keras.utils.Sequence):
 
     def reshape(self, img, output_size):
         assert isinstance(output_size, (int, tuple))
-        h, w = img.shape[:2]
-        if isinstance(output_size, int):
-            if h > w:
-                new_h, new_w = output_size * h / w, output_size
-            else:
-                new_h, new_w = output_size, output_size * w / h
-        else:
-            new_h, new_w = output_size,output_size
 
-        new_h, new_w = output_size, output_size
+        new_h, new_w = output_size[0], output_size[1]
         new_h, new_w = int(new_h), int(new_w)
 
         return transform.resize(img, (new_h, new_w))
-
-

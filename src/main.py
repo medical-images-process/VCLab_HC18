@@ -1,97 +1,122 @@
 import os
 import sys
 import numpy as np
-
+import pandas as pd
 from src.predictor import predict
 from keras.callbacks import ModelCheckpoint
 from src.parallel_model_save import ModelCheckpointParallel
 from src.dataLoader import DataGenerator
-# from src.models.u_net import get_advanced_unet_512 as get_unet
-from src.models.u_net import get_opt_advanced_unet_512 as get_unet
+from src.models.u_net import get_unet
 
 
 def main(argv):
     ###############################
     # Parameters                  #
     ###############################
-    # paths
-    train_dataset_dir = os.path.join(os.getcwd(),"Dataset", "training")
+    learn_mode = 'train'
+    input_shape = (540, 800, 1)
+    image_transformer = {'reshape': input_shape[0:2], 'distanceTransform': False}
+    model_name = 'unet_opt_' + str(input_shape[0:2]).replace(' ', '').replace('(', '').replace(')', '').replace(',',
+                                                                                                                'x')
+    ###############################
+    #  paths
+    train_dataset_dir = os.path.join(os.getcwd(), "Dataset", "training")
     csv_file = os.path.join(train_dataset_dir, 'training.csv')
 
     test_dataset_dir = os.path.join(os.getcwd(), 'Dataset/test')
     test_csv = os.path.join(train_dataset_dir, 'test_set_pixel_size.csv')
 
     model_path = os.path.join(os.getcwd(), 'saved_models/keras_unet_trained_model.h5')
+    return_checkpoint = os.path.join(os.getcwd(), 'saved_models/checkpoints/ckp-04-6.33.hdf5')
 
     # training parameter
-    num_epochs = 100
-    batch_size = 2
+    num_epochs = 5
+    # batch_size = 16
+    batch_size = 4
     num_workers = 4
-    shuffle = False
-    trainings_split = 0.5
-    #len_set = int(len(pd.read_csv(csv_file)))
-    len_set = 16
-    num_training_samples = int(len_set -len_set * trainings_split)
-    num_validation_samples = int(len_set * trainings_split)
+    shuffle = True
+    trainings_split = 0.8
+    # trainings_split = 0.5
+    len_set = int(len(pd.read_csv(csv_file)))
+    # len_set = 16
+    num_training_samples = int(len_set * trainings_split)
+    num_validation_samples = len_set - num_training_samples
 
-    verbose=1
-
-    ###############################
-    # Load Dataset                #
-    ###############################
-    print("load dataset")
-    partition = {
-        'train': np.arange(num_training_samples),
-        'validate': len_set - np.arange(num_validation_samples)}
-    imager_transformer = {'reshape': 512, 'distanceTransform': False}
-
-    training_generator = DataGenerator(partition['train'], csv_file=csv_file, root_dir=os.path.join(train_dataset_dir, 'set'),
-                                             batch_size= batch_size, transform=imager_transformer)
-
-    validation_generator = DataGenerator(partition['validate'], csv_file=csv_file,
-                                       root_dir=os.path.join(train_dataset_dir, 'set'),
-                                       batch_size=batch_size, transform=imager_transformer)
-
+    verbose = 1
 
     ###############################
-    # Start learning              #
+    # Load Model                  #
     ###############################
-
     # load model
-    print("load model")
-    model_template, model = get_unet()
+    print("Load model")
+    model_template, model = get_unet(model_name=model_name, input_shape=input_shape)
+
+    if learn_mode == 'return_from_checkpoint':
+        print('Return from checkpoint: ' + return_checkpoint)
+        model.load_weights(return_checkpoint)
+
+    if learn_mode == 'predict_only':
+        print('Predictions on model: ' + model_path)
+        model.load_weights(model_path)
 
     # details of the model
-    model_template.summary()
+    # model_template.summary()
     # from keras.utils import plot_model
     # plot_model(model_template, to_file='model.png')
 
-    # checkpoint
-    file = "saved_models/checkpoints/ckp-{epoch:02d}-{val_loss:.2f}.hdf5"
-    checkpoint = ModelCheckpoint(filepath=file, monitor='val_loss', verbose=verbose, mode='auto', save_best_only=True)
-    callback_list = [checkpoint]
+    if not learn_mode == 'predict_only':
+        ###############################
+        # Load Dataset                #
+        ###############################
+        print("Load dataset")
+        partition = {
+            'train': np.arange(num_training_samples),
+            'validate': (len_set - 1) - np.arange(num_validation_samples)}
 
-    # train model
-    print("train model")
-    model.fit_generator(generator=training_generator,
-                        validation_data=validation_generator,
-                        steps_per_epoch=num_training_samples / batch_size,
-                        epochs=num_epochs,
-                        callbacks=callback_list,
-                        verbose=verbose,
-                        shuffle=shuffle)
+        training_generator = DataGenerator(partition['train'], csv_file=csv_file,
+                                           root_dir=os.path.join(train_dataset_dir, 'set'),
+                                           batch_size=batch_size, transform=image_transformer)
 
-    # Save model via the template model (which shares the same weights):
-    model_template.save(model_path)
-    print("model saved to disk")
+        validation_generator = DataGenerator(partition['validate'], csv_file=csv_file,
+                                             root_dir=os.path.join(train_dataset_dir, 'set'),
+                                             batch_size=batch_size, transform=image_transformer)
 
-    # Predict
-    predict(model=model, csv=csv_file, im_path=os.path.join(train_dataset_dir, 'set'))
-    # evaluate the model
-    print("evaluate model")
-    scores = model.evaluate_generator(validation_generator, num_validation_samples/batch_size, workers=num_workers)
-    print("%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
+        ###############################
+        # Train Model                 #
+        ###############################
+        # set checkpoints
+        file = "saved_models/checkpoints/ckp-{epoch:02d}-{val_loss:.2f}.hdf5"
+        checkpoint = ModelCheckpoint(filepath=file, monitor='val_loss', verbose=verbose, mode='auto',
+                                     save_best_only=True)
+        callback_list = [checkpoint]
 
+        # train model
+        print("Train model")
+        model.fit_generator(generator=training_generator,
+                            validation_data=validation_generator,
+                            steps_per_epoch=num_training_samples / batch_size,
+                            epochs=num_epochs,
+                            callbacks=callback_list,
+                            verbose=verbose,
+                            shuffle=shuffle)
+
+        # Save model via template_model (shares the same weights):
+        model_template.save(model_path)
+        print("Model saved to disk")
+
+        ###############################
+        # Evaluate Model              #
+        ###############################
+        print("Evaluate model")
+        scores = model.evaluate_generator(validation_generator, num_validation_samples / batch_size,
+                                          workers=num_workers)
+        print("%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
+
+    ###############################
+    # Predict Test                #
+    ###############################
+    print('Predict...')
+    predict(model=model, path=train_dataset_dir, csv_in=csv_file)
 
 
 if __name__ == "__main__":
