@@ -26,9 +26,10 @@ def main(argv):
     test_dataset_dir = os.path.join(os.getcwd(), 'Dataset/test')
     test_csv = os.path.join(train_dataset_dir, 'test_set_pixel_size.csv')
 
-    model_path = os.path.join(os.getcwd(), 'saved_models/keras_unet_trained_model.h5')
+    model_path = os.path.join(os.getcwd(), 'saved_models/keras_'+ model_name + 'trained_model.h5')
     return_checkpoint = os.path.join(os.getcwd(), 'saved_models/checkpoints/ckp-04-6.33.hdf5')
 
+    ###############################
     # training parameter
     num_epochs = 5
     # batch_size = 16
