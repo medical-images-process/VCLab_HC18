@@ -1,13 +1,12 @@
 import os
-os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 import sys
 import numpy as np
 import pandas as pd
-from src.predictor import predict
 from keras.callbacks import ModelCheckpoint
-from src.parallel_model_save import ModelCheckpointParallel
+from src.predictor import predict
 from src.dataLoader import DataGenerator
 from src.models.u_net import get_unet
 
@@ -17,7 +16,7 @@ def main(argv):
     # Parameters                  #
     ###############################
     # leran mode = train | return_from_checkpoint | evaluate_only | predict_only
-    learn_mode = 'predict_only'
+    learn_mode = 'train'
     input_shape = (540, 800, 1)
     pooling_mode = 'avg'
     image_transformer = {'reshape': input_shape[0:2], 'distanceTransform': False}
@@ -36,15 +35,12 @@ def main(argv):
 
     ###############################
     # training parameter
-    num_epochs = 5
-    # batch_size = 16
+    num_epochs = 30
     batch_size = 8
     num_workers = 4
     shuffle = True
     trainings_split = 0.8
-    #trainings_split = 0.5
     len_set = int(len(pd.read_csv(csv_file)))
-    #len_set = 16
     num_training_samples = int(len_set * trainings_split)
     num_validation_samples = len_set - num_training_samples
 
@@ -60,17 +56,19 @@ def main(argv):
     if learn_mode == 'return_from_checkpoint':
         print('Return from checkpoint: ' + return_checkpoint)
         model.load_weights(return_checkpoint)
+        # continue training
+        learn_mode = 'train'
 
     if learn_mode == 'predict_only':
         print('Predictions on model: ' + model_path)
         model.load_weights(model_path)
 
     # details of the model
-    # model_template.summary()
     # from keras.utils import plot_model
     # plot_model(model_template, to_file='model.png')
+    # model_template.summary()
 
-    if not learn_mode == 'predict_only' or not learn_mode == 'evaluate_only':
+    if learn_mode == 'train':
         ###############################
         # Load Dataset                #
         ###############################
@@ -126,6 +124,12 @@ def main(argv):
         print('Predict...')
         predict(model=model, path=train_dataset_dir, csv_in=csv_file, image_transformer=image_transformer)
 
+    ###############################
+    # Delete the  Model           #
+    ###############################
+    print("Delete model")
+    del model, model_template
+    print('***** FINISHED *****')
 
 if __name__ == "__main__":
     main(sys.argv)
