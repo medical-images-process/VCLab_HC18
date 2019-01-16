@@ -108,7 +108,11 @@ def main(argv):
         model_template.save(model_path)
         print("Model saved to disk")
 
-    if learn_mode == 'evaluate_only':
+        # evaluate training
+        learn_mode = 'evaluate'
+
+
+    if learn_mode == 'evaluate_only' or learn_mode == 'evaluate':
         ###############################
         # Evaluate Model              #
         ###############################
@@ -116,8 +120,11 @@ def main(argv):
         scores = model.evaluate_generator(validation_generator, num_validation_samples / batch_size,
                                           workers=num_workers)
         print("%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
+        # predict model
+        if learn_mode == 'evaluate':
+            learn_mode  = 'predict'
 
-    if not learn_mode == 'evaluate_only':
+    if learn_mode == 'predict' or learn_mode == 'predict_only':
         ###############################
         # Predict Test                #
         ###############################
