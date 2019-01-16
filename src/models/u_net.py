@@ -1,7 +1,7 @@
 from keras.utils import multi_gpu_model
 from keras.models import Model
 from keras.layers import Input, concatenate, Conv2D, Dense, MaxPooling2D, Activation, UpSampling2D, BatchNormalization, \
-    Flatten, LeakyReLU, GlobalAveragePooling2D
+     LeakyReLU
 from keras.optimizers import RMSprop
 from src.models import losses
 import numpy as np
@@ -10,7 +10,7 @@ import numpy as np
 # ===========================================================================
 # \brief Symmetric Unet for shapes 512,512
 #
-def create_unet_512x512(input_shape=(512, 512, 1),
+def create_unet_512x512(input_shape=(512, 512, 1), pooling_mode='avg',
                         num_classes=1):
     inputs = Input(shape=input_shape)
     # 512x512x1
@@ -114,8 +114,15 @@ def create_unet_512x512(input_shape=(512, 512, 1),
     # Output layer (segmentation) -> 512x512x3
 
     # prediction of ellipse parameters
-    # ep4 = Flatten()(center)
-    ep4 = GlobalAveragePooling2D()(center)
+    if pooling_mode == 'flatten':
+        from keras.layers import Flatten
+        ep4 = Flatten()(center)
+    if pooling_mode == 'avg':
+        from keras.layers import GlobalAveragePooling2D
+        ep4 = GlobalAveragePooling2D()(center)
+    if pooling_mode == 'max':
+        from keras.layers import GlobalMaxPooling2D
+        ep4 = GlobalMaxPooling2D()(center)
 
     ep3 = Dense(128)(ep4)
     ep3 = BatchNormalization()(ep3)
@@ -158,9 +165,9 @@ def create_unet_512x512(input_shape=(512, 512, 1),
 
 
 # ===========================================================================
-# \brief Symmetric Unet for shapes 512,512 with optimized numbers of parameter
+# \brief Symmetric Unet for shapes 512,512 with minimized numbers of parameter
 #
-def create_unet_opt_512x512(input_shape=(512, 512, 1),
+def create_unet_min_512x512(input_shape=(512, 512, 1), pooling_mode='avg',
                             num_classes=1):
     inputs = Input(shape=input_shape)
     # 512x512x1
@@ -229,8 +236,15 @@ def create_unet_opt_512x512(input_shape=(512, 512, 1),
     # Output layer (segmentation) -> 512x512x3
 
     # prediction of ellipse parameters
-    # ep4 = Flatten()(center)
-    ep4 = GlobalAveragePooling2D()(center)
+    if pooling_mode == 'flatten':
+        from keras.layers import Flatten
+        ep4 = Flatten()(center)
+    if pooling_mode == 'avg':
+        from keras.layers import GlobalAveragePooling2D
+        ep4 = GlobalAveragePooling2D()(center)
+    if pooling_mode == 'max':
+        from keras.layers import GlobalMaxPooling2D
+        ep4 = GlobalMaxPooling2D()(center)
 
     ep3 = Dense(128)(ep4)
     ep3 = BatchNormalization()(ep3)
@@ -273,9 +287,9 @@ def create_unet_opt_512x512(input_shape=(512, 512, 1),
 
 
 # ===========================================================================
-# \brief Symmetric Unet for shapes 800,540 with optimized numbers of parameter
+# \brief Symmetric Unet for shapes 800,540 with minimized numbers of parameter
 #
-def create_unet_opt_540x800(input_shape=(540, 800, 1),
+def create_unet_min_540x800(input_shape=(540, 800, 1), pooling_mode='avg',
                             num_classes=1):
     inputs = Input(shape=input_shape)
     # 800x540x1
@@ -344,8 +358,15 @@ def create_unet_opt_540x800(input_shape=(540, 800, 1),
     # Output layer (segmentation) -> 512x512x3
 
     # prediction of ellipse parameters
-    # ep4 = Flatten()(center)
-    ep4 = GlobalAveragePooling2D()(center)
+    if pooling_mode == 'flatten':
+        from keras.layers import Flatten
+        ep4 = Flatten()(center)
+    if pooling_mode == 'avg':
+        from keras.layers import GlobalAveragePooling2D
+        ep4 = GlobalAveragePooling2D()(center)
+    if pooling_mode == 'max':
+        from keras.layers import GlobalMaxPooling2D
+        ep4 = GlobalMaxPooling2D()(center)
 
     ep3 = Dense(128)(ep4)
     ep3 = BatchNormalization()(ep3)
@@ -390,9 +411,9 @@ def create_unet_opt_540x800(input_shape=(540, 800, 1),
 # ===========================================================================
 # \brief Returns a symmetric Unet model arcitecture
 #
-def get_unet(model_name='unet_opt_512x512', input_shape=(512, 512, 1), num_classes=1):
+def get_unet(model_name='unet_opt_512x512', input_shape=(512, 512, 1), pooling_mode='avg', num_classes=1):
     print('Create model: ' + model_name)
-    model = globals()['create_' + model_name](input_shape=input_shape, num_classes=num_classes)
+    model = globals()['create_' + model_name](input_shape=input_shape, pooling_mode=pooling_mode ,num_classes=num_classes)
 
     # parallelize model
     try:
@@ -406,5 +427,5 @@ def get_unet(model_name='unet_opt_512x512', input_shape=(512, 512, 1), num_class
     weighted_loss = losses.class_weighted_cross_entropy_3(class_weights_2)
 
     from keras.losses import MSE, logcosh
-    parallel_model.compile(optimizer=RMSprop(lr=0.0001), loss=MSE, metrics=['mse'])
+    parallel_model.compile(optimizer=RMSprop(lr=0.01), loss=MSE, metrics=['mse'])
     return model, parallel_model

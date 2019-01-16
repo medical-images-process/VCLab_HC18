@@ -1,4 +1,7 @@
 import os
+os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"]="0"
+
 import sys
 import numpy as np
 import pandas as pd
@@ -13,10 +16,12 @@ def main(argv):
     ###############################
     # Parameters                  #
     ###############################
-    learn_mode = 'train'
+    # leran mode = train | return_from_checkpoint | evaluate_only | predict_only
+    learn_mode = 'predict_only'
     input_shape = (540, 800, 1)
+    pooling_mode = 'avg'
     image_transformer = {'reshape': input_shape[0:2], 'distanceTransform': False}
-    model_name = 'unet_opt_' + str(input_shape[0:2]).replace(' ', '').replace('(', '').replace(')', '').replace(',',
+    model_name = 'unet_min_' + str(input_shape[0:2]).replace(' ', '').replace('(', '').replace(')', '').replace(',',
                                                                                                                 'x')
     ###############################
     #  paths
@@ -27,19 +32,19 @@ def main(argv):
     test_csv = os.path.join(train_dataset_dir, 'test_set_pixel_size.csv')
 
     model_path = os.path.join(os.getcwd(), 'saved_models/keras_'+ model_name + 'trained_model.h5')
-    return_checkpoint = os.path.join(os.getcwd(), 'saved_models/checkpoints/ckp-04-6.33.hdf5')
+    return_checkpoint = os.path.join(os.getcwd(), 'saved_models/checkpoints/ckp-02-4.93.hdf5')
 
     ###############################
     # training parameter
     num_epochs = 5
     # batch_size = 16
-    batch_size = 4
+    batch_size = 8
     num_workers = 4
     shuffle = True
     trainings_split = 0.8
-    # trainings_split = 0.5
+    #trainings_split = 0.5
     len_set = int(len(pd.read_csv(csv_file)))
-    # len_set = 16
+    #len_set = 16
     num_training_samples = int(len_set * trainings_split)
     num_validation_samples = len_set - num_training_samples
 
@@ -50,7 +55,7 @@ def main(argv):
     ###############################
     # load model
     print("Load model")
-    model_template, model = get_unet(model_name=model_name, input_shape=input_shape)
+    model_template, model = get_unet(model_name=model_name, pooling_mode=pooling_mode, input_shape=input_shape)
 
     if learn_mode == 'return_from_checkpoint':
         print('Return from checkpoint: ' + return_checkpoint)
@@ -65,7 +70,7 @@ def main(argv):
     # from keras.utils import plot_model
     # plot_model(model_template, to_file='model.png')
 
-    if not learn_mode == 'predict_only':
+    if not learn_mode == 'predict_only' or not learn_mode == 'evaluate_only':
         ###############################
         # Load Dataset                #
         ###############################
@@ -105,6 +110,7 @@ def main(argv):
         model_template.save(model_path)
         print("Model saved to disk")
 
+    if learn_mode == 'evaluate_only':
         ###############################
         # Evaluate Model              #
         ###############################
@@ -113,11 +119,12 @@ def main(argv):
                                           workers=num_workers)
         print("%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
 
-    ###############################
-    # Predict Test                #
-    ###############################
-    print('Predict...')
-    predict(model=model, path=train_dataset_dir, csv_in=csv_file)
+    if not learn_mode == 'evaluate_only':
+        ###############################
+        # Predict Test                #
+        ###############################
+        print('Predict...')
+        predict(model=model, path=train_dataset_dir, csv_in=csv_file, image_transformer=image_transformer)
 
 
 if __name__ == "__main__":
