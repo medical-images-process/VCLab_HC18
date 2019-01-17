@@ -5,10 +5,12 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import sys
 import numpy as np
 import pandas as pd
-from keras.callbacks import ModelCheckpoint
+import matplotlib.pyplot as plt
 from src.predictor import predict
-from src.dataLoader import DataGenerator
 from src.models.u_net import get_unet
+from src.dataLoader import DataGenerator
+from keras.callbacks import ModelCheckpoint
+
 
 
 def main(argv):
@@ -36,9 +38,11 @@ def main(argv):
     ###############################
     # training parameter
     num_epochs = 30
-    batch_size = 8
-    num_workers = 4
+    batch_size = 4
+    num_workers = 2
     shuffle = True
+    lr = 0.01
+
     trainings_split = 0.8
     len_set = int(len(pd.read_csv(csv_file)))
     num_training_samples = int(len_set * trainings_split)
@@ -51,7 +55,7 @@ def main(argv):
     ###############################
     # load model
     print("Load model")
-    model_template, model = get_unet(model_name=model_name, pooling_mode=pooling_mode, input_shape=input_shape)
+    model_template, model = get_unet(model_name=model_name, pooling_mode=pooling_mode, input_shape=input_shape, lr=lr)
 
     if learn_mode == 'return_from_checkpoint':
         print('Return from checkpoint: ' + return_checkpoint)
@@ -96,7 +100,7 @@ def main(argv):
 
         # train model
         print("Train model")
-        model.fit_generator(generator=training_generator,
+        history = model.fit_generator(generator=training_generator,
                             validation_data=validation_generator,
                             steps_per_epoch=num_training_samples / batch_size,
                             epochs=num_epochs,
@@ -107,6 +111,14 @@ def main(argv):
         # Save model via template_model (shares the same weights):
         model_template.save(model_path)
         print("Model saved to disk")
+
+        plt.plot(history.history['loss'])
+        plt.plot(history.history['val_loss'])
+        plt.title('model loss')
+        plt.ylabel('loss')
+        plt.xlabel('epoch')
+        plt.legend(['train', 'test'], loc='upper left')
+        plt.show()
 
         # evaluate training
         learn_mode = 'evaluate'

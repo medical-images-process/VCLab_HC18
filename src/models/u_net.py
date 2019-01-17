@@ -1,10 +1,10 @@
-from keras.utils import multi_gpu_model
-from keras.models import Model
-from keras.layers import Input, concatenate, Conv2D, Dense, MaxPooling2D, Activation, UpSampling2D, BatchNormalization, \
-     LeakyReLU
-from keras.optimizers import RMSprop
-from src.models import losses
 import numpy as np
+from src.models import losses
+from keras.models import Model
+from keras.utils import multi_gpu_model
+from keras.optimizers import RMSprop
+from keras.layers import Input, concatenate, Conv2D, Dense, MaxPooling2D, UpSampling2D, BatchNormalization, LeakyReLU
+
 
 
 # ===========================================================================
@@ -306,7 +306,6 @@ def create_unet_min_540x800(input_shape=(540, 800, 1), pooling_mode='avg',
     down0_pool = MaxPooling2D((2, 2), strides=(6, 4))(down0)
     # 128x128x32
 
-
     down1 = Conv2D(64, (3, 3), padding='same')(down0_pool)
     down1 = BatchNormalization()(down1)
     down1 = LeakyReLU(alpha=0.1)(down1)
@@ -411,13 +410,13 @@ def create_unet_min_540x800(input_shape=(540, 800, 1), pooling_mode='avg',
 # ===========================================================================
 # \brief Returns a symmetric Unet model arcitecture
 #
-def get_unet(model_name='unet_opt_512x512', input_shape=(512, 512, 1), pooling_mode='avg', num_classes=1):
+def get_unet(model_name='unet_opt_512x512', input_shape=(512, 512, 1), pooling_mode='avg', num_classes=1, lr=0.01):
     print('Create model: ' + model_name)
     model = globals()['create_' + model_name](input_shape=input_shape, pooling_mode=pooling_mode ,num_classes=num_classes)
 
     # parallelize model
     try:
-        parallel_model = multi_gpu_model(model=model, cpu_relocation=True)
+        parallel_model = multi_gpu_model(model=model, cpu_relocation=False)
         print("Training using multi GPU...")
     except ValueError:
         parallel_model = model
@@ -427,5 +426,5 @@ def get_unet(model_name='unet_opt_512x512', input_shape=(512, 512, 1), pooling_m
     weighted_loss = losses.class_weighted_cross_entropy_3(class_weights_2)
 
     from keras.losses import MSE, logcosh
-    parallel_model.compile(optimizer=RMSprop(lr=0.01), loss=MSE, metrics=['mse'])
+    parallel_model.compile(optimizer=RMSprop(lr=lr), loss=MSE, metrics=['mse'])
     return model, parallel_model
