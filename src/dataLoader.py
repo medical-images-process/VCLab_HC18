@@ -59,7 +59,7 @@ class DataGenerator(keras.utils.Sequence):
         # calculated head circumference in pixel =  head circumference (mm) // pixel_size(mm)
         # normalize hc to [-1,1] choosing 150 as max
         batch_hc = (self.hc_frame.iloc[list_idx, 8] / self.hc_frame.iloc[list_idx, 1] - (
-        75 / self.hc_frame.iloc[list_idx, 1])) / (75 / self.hc_frame.iloc[list_idx, 1])
+        200 / self.hc_frame.iloc[list_idx, 1])) / (200 / self.hc_frame.iloc[list_idx, 1])
 
         # center_x_pixel = center_x_mm / pixel_mm
         batch_center_x = self.hc_frame.iloc[list_idx, 3] / self.hc_frame.iloc[list_idx, 1]

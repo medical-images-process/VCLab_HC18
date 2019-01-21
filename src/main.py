@@ -1,7 +1,4 @@
 import os
-os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-
 import sys
 import numpy as np
 import pandas as pd
@@ -21,9 +18,19 @@ def main(argv):
     learn_mode = 'train'
     input_shape = (540, 800, 1)
     pooling_mode = 'avg'
-    image_transformer = {'reshape': input_shape[0:2], 'distanceTransform': False}
+    image_transformer = {'reshape': input_shape[0:2], 'distanceTransform': True}
     model_name = 'unet_min_' + str(input_shape[0:2]).replace(' ', '').replace('(', '').replace(')', '').replace(',',
                                                                                                                 'x')
+
+    ###############################
+    # training parameter
+    num_epochs = 10
+    batch_size = 8
+    num_workers = 8
+    shuffle = True
+    lr = 0.01
+    verbose = 1
+
     ###############################
     #  paths
     train_dataset_dir = os.path.join(os.getcwd(), "Dataset", "training")
@@ -32,23 +39,15 @@ def main(argv):
     test_dataset_dir = os.path.join(os.getcwd(), 'Dataset/test')
     test_csv = os.path.join(train_dataset_dir, 'test_set_pixel_size.csv')
 
-    model_path = os.path.join(os.getcwd(), 'saved_models/keras_'+ model_name + 'trained_model.h5')
+    model_path = os.path.join(os.getcwd(), 'saved_models/' + 'trained_model_' + model_name + '_' + str(num_epochs) + '_' + str(lr) + '.h5')
     return_checkpoint = os.path.join(os.getcwd(), 'saved_models/checkpoints/ckp-02-4.93.hdf5')
 
     ###############################
-    # training parameter
-    num_epochs = 30
-    batch_size = 4
-    num_workers = 2
-    shuffle = True
-    lr = 0.01
-
+    #  dataset parameters
     trainings_split = 0.8
     len_set = int(len(pd.read_csv(csv_file)))
     num_training_samples = int(len_set * trainings_split)
     num_validation_samples = len_set - num_training_samples
-
-    verbose = 1
 
     ###############################
     # Load Model                  #
@@ -72,7 +71,7 @@ def main(argv):
     # plot_model(model_template, to_file='model.png')
     # model_template.summary()
 
-    if learn_mode == 'train':
+    if learn_mode == 'train' or learn_mode == 'train_only':
         ###############################
         # Load Dataset                #
         ###############################
@@ -118,10 +117,11 @@ def main(argv):
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.legend(['train', 'test'], loc='upper left')
-        plt.show()
+        plt.savefig(os.path.join('saved_models', model_name + '_' + str(num_epochs)+ '.png'))
 
         # evaluate training
-        learn_mode = 'evaluate'
+        if learn_mode == 'train':
+            learn_mode = 'evaluate'
 
 
     if learn_mode == 'evaluate_only' or learn_mode == 'evaluate':
