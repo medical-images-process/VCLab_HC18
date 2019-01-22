@@ -14,8 +14,8 @@ def main(argv):
     # Parameters                  #
     ###############################
     # leran mode = train | return_from_checkpoint | evaluate_only | predict_only
-    learn_mode = 'tt'
-    input_shape = (540, 800, 1)
+    learn_mode = 'train'
+    input_shape = (135, 200, 1)
     pooling_mode = 'avg'
     image_transformer = {'reshape': input_shape[0:2], 'distanceTransform': True}
     model_name = 'unet_min_' + str(input_shape[0:2]).replace(' ', '').replace('(', '').replace(')', '').replace(',',
@@ -23,8 +23,8 @@ def main(argv):
 
     ###############################
     # training parameter
-    num_epochs = 20
-    batch_size = 8
+    num_epochs = 100
+    batch_size = 64
     shuffle = True
     lr = 0.0001
     verbose = 1
@@ -69,7 +69,7 @@ def main(argv):
 
     if learn_mode == 'predict_only' or learn_mode == "evaluate":
         print('Predictions on model: ' + model_path)
-        model.load_weights(model_path)
+        model_template.load_weights(model_path)
 
     if learn_mode == 'train' or learn_mode == 'train_only':
         ###############################
@@ -143,7 +143,7 @@ def main(argv):
         if learn_mode == 'evaluate':
             learn_mode = 'predict'
 
-    if False and (learn_mode == 'predict' or learn_mode == 'predict_only'):
+    if learn_mode == 'predict' or learn_mode == 'predict_only':
         ###############################
         # Predict Test                #
         ###############################

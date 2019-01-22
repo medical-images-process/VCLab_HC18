@@ -86,6 +86,8 @@ class DataGenerator(keras.utils.Sequence):
 
     # transformer for image augmentation
     def image_transformer(self, image, mode):
+        # mormelize to [0,1]
+        image = image.astype('float32') / 255
         # reshape image
         if 'reshape' in self.transform.keys():
             image = self.reshape(image, self.transform['reshape'])
