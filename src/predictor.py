@@ -9,6 +9,7 @@ def predict(model, path, csv_in, image_transformer):
     # variable for undo normalisation to [-1,1]
     rn_x = image_transformer['reshape'][0] / 2 if 'reshape' in image_transformer.keys() else 400
     rn_y = image_transformer['reshape'][1] / 2 if 'reshape' in image_transformer.keys() else 270
+    rn_hc = 200
     with open(csv_in, "rt") as infile, open(
             os.path.join(path, 'results.csv'), "w", newline='') as outfile:
         reader = csv.reader(infile)
@@ -19,7 +20,7 @@ def predict(model, path, csv_in, image_transformer):
             writer.writerow(['filename'] + ['center_x_mm'] + ['center_y_mm'] + ['semi_axes_a_mm'] + ['semi_axes_b_mm']
                             + ['angle_rad'] + ['hc_mm'])
         for row in reader:
-            print('...' + row[0])
+            # print('...' + row[0])
             pixel_mm = float(row[1])
             img_name = row[0].replace('.png', '_Predicted.png')
             p = io.imread(os.path.join(os.path.join(path, 'set'), row[0]))
@@ -31,6 +32,7 @@ def predict(model, path, csv_in, image_transformer):
             cy = cy * rn_y + rn_y
             a = a * rn_x + rn_x
             b = b * rn_x + rn_x
+            hc = hc * rn_hc + rn_hc
             angle_rad = np.arctan2(angle_sin, angle_cos)
             writer.writerow([row[0]] +
                             [str(round(cx[0][0] * pixel_mm, 9))] +

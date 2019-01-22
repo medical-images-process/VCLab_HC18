@@ -1,10 +1,9 @@
 import numpy as np
 from src.models import losses
+from keras import optimizers
 from keras.models import Model
 from keras.utils import multi_gpu_model
-from keras.optimizers import RMSprop
 from keras.layers import Input, concatenate, Conv2D, Dense, MaxPooling2D, UpSampling2D, BatchNormalization, LeakyReLU
-
 
 
 # ===========================================================================
@@ -184,7 +183,6 @@ def create_unet_min_512x512(input_shape=(512, 512, 1), pooling_mode='avg',
     down0_pool = MaxPooling2D((2, 2), strides=(4, 4))(down0)
     # 128x128x32
 
-
     down1 = Conv2D(64, (3, 3), padding='same')(down0_pool)
     down1 = BatchNormalization()(down1)
     down1 = LeakyReLU(alpha=0.1)(down1)
@@ -353,7 +351,7 @@ def create_unet_min_540x800(input_shape=(540, 800, 1), pooling_mode='avg',
     up0 = LeakyReLU(alpha=0.1)(up0)
     # 512x512x16
 
-    segmentation = Conv2D(num_classes, (1, 1), activation='softmax')(up0)
+    segmentation = Conv2D(num_classes, (1, 1), activation='softmax', bias_initializer='zeros')(up0)
     # Output layer (segmentation) -> 512x512x3
 
     # prediction of ellipse parameters
@@ -379,25 +377,25 @@ def create_unet_min_540x800(input_shape=(540, 800, 1), pooling_mode='avg',
     ep1 = BatchNormalization()(ep1)
     ep1 = LeakyReLU(alpha=0.1)(ep1)
 
-    ep_center_x = Dense(1, activation='relu')(ep1)
+    ep_center_x = Dense(1, activation='relu', bias_initializer='zeros')(ep1)
     # Output (center_x) -> 1x1
 
-    ep_center_y = Dense(1, activation='relu')(ep1)
+    ep_center_y = Dense(1, activation='relu', bias_initializer='zeros')(ep1)
     # Output (center_y) -> 1x1
 
-    ep_axis_a = Dense(1, activation='relu')(ep1)
+    ep_axis_a = Dense(1, activation='relu', bias_initializer='zeros')(ep1)
     # Output (semi_axis_a) -> 1x1
 
-    ep_axis_b = Dense(1, activation='relu')(ep1)
+    ep_axis_b = Dense(1, activation='relu', bias_initializer='zeros')(ep1)
     # Output (semi_axis_b) -> 1x1
 
-    ep_angle_sin = Dense(1, activation='tanh')(ep1)
+    ep_angle_sin = Dense(1, activation='tanh', bias_initializer='zeros')(ep1)
     # Output (angle as sin) -> 1x1
 
-    ep_angle_cos = Dense(1, activation='tanh')(ep1)
+    ep_angle_cos = Dense(1, activation='tanh', bias_initializer='zeros')(ep1)
     # Output (angle as cos) -> 1x1
 
-    ep_hc = Dense(1, activation='relu')(ep1)
+    ep_hc = Dense(1, activation='relu', bias_initializer='zeros')(ep1)
     # Output (hc) -> 1x1
 
     # build model with two outputs
@@ -412,7 +410,8 @@ def create_unet_min_540x800(input_shape=(540, 800, 1), pooling_mode='avg',
 #
 def get_unet(model_name='unet_opt_512x512', input_shape=(512, 512, 1), pooling_mode='avg', num_classes=1, lr=0.01):
     print('Create model: ' + model_name)
-    model = globals()['create_' + model_name](input_shape=input_shape, pooling_mode=pooling_mode ,num_classes=num_classes)
+    model = globals()['create_' + model_name](input_shape=input_shape, pooling_mode=pooling_mode,
+                                              num_classes=num_classes)
 
     # parallelize model
     try:
@@ -425,6 +424,7 @@ def get_unet(model_name='unet_opt_512x512', input_shape=(512, 512, 1), pooling_m
     class_weights_2 = np.ones(num_classes)
     weighted_loss = losses.class_weighted_cross_entropy_3(class_weights_2)
 
-    from keras.losses import MSE, logcosh
-    parallel_model.compile(optimizer=RMSprop(lr=lr), loss=MSE, metrics=['mse'])
+    optimizer = optimizers.SGD(lr=lr, momentum=0.9, decay=1e-6, nesterov=True)
+    parallel_model.compile(loss='mse', loss_weights=[0.3, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1], optimizer=optimizer, metrics=['mse'])
+    # parallel_model.compile(loss='mse', optimizer=optimizer, metrics=['mse'])
     return model, parallel_model

@@ -9,7 +9,6 @@ from src.dataLoader import DataGenerator
 from keras.callbacks import ModelCheckpoint
 
 
-
 def main(argv):
     ###############################
     # Parameters                  #
@@ -24,11 +23,10 @@ def main(argv):
 
     ###############################
     # training parameter
-    num_epochs = 10
+    num_epochs = 500
     batch_size = 8
-    num_workers = 8
     shuffle = True
-    lr = 0.01
+    lr = 0.0001
     verbose = 1
 
     ###############################
@@ -39,12 +37,14 @@ def main(argv):
     test_dataset_dir = os.path.join(os.getcwd(), 'Dataset/test')
     test_csv = os.path.join(train_dataset_dir, 'test_set_pixel_size.csv')
 
-    model_path = os.path.join(os.getcwd(), 'saved_models/' + 'trained_model_' + model_name + '_' + str(num_epochs) + '_' + str(lr) + '.h5')
-    return_checkpoint = os.path.join(os.getcwd(), 'saved_models/checkpoints/ckp-02-4.93.hdf5')
+    model_path = os.path.join(os.getcwd(),
+                              'saved_models/' + 'trained_model_' + model_name + '_' + str(num_epochs) + '_' + str(
+                                  lr) + '.h5')
+    return_checkpoint = os.path.join(os.getcwd(), 'saved_models/checkpoints/ckp-48-1.00.hdf5')
 
     ###############################
     #  dataset parameters
-    trainings_split = 0.8
+    trainings_split = 0.9
     len_set = int(len(pd.read_csv(csv_file)))
     num_training_samples = int(len_set * trainings_split)
     num_validation_samples = len_set - num_training_samples
@@ -56,20 +56,20 @@ def main(argv):
     print("Load model")
     model_template, model = get_unet(model_name=model_name, pooling_mode=pooling_mode, input_shape=input_shape, lr=lr)
 
+    # details of the model
+    # from keras.utils import plot_model
+    # plot_model(model_template, to_file='model.png')
+    # model_template.summary()
+
     if learn_mode == 'return_from_checkpoint':
         print('Return from checkpoint: ' + return_checkpoint)
         model.load_weights(return_checkpoint)
         # continue training
         learn_mode = 'train'
 
-    if learn_mode == 'predict_only':
+    if learn_mode == 'predict_only' or learn_mode == "evaluate":
         print('Predictions on model: ' + model_path)
         model.load_weights(model_path)
-
-    # details of the model
-    # from keras.utils import plot_model
-    # plot_model(model_template, to_file='model.png')
-    # model_template.summary()
 
     if learn_mode == 'train' or learn_mode == 'train_only':
         ###############################
@@ -93,19 +93,19 @@ def main(argv):
         ###############################
         # set checkpoints
         file = "saved_models/checkpoints/ckp-{epoch:02d}-{val_loss:.2f}.hdf5"
-        checkpoint = ModelCheckpoint(filepath=file, monitor='val_loss', verbose=verbose, mode='auto',
+        checkpoint = ModelCheckpoint(filepath=file, monitor='loss', verbose=verbose, mode='auto',
                                      save_best_only=True)
         callback_list = [checkpoint]
 
         # train model
         print("Train model")
         history = model.fit_generator(generator=training_generator,
-                            validation_data=validation_generator,
-                            steps_per_epoch=num_training_samples / batch_size,
-                            epochs=num_epochs,
-                            callbacks=callback_list,
-                            verbose=verbose,
-                            shuffle=shuffle)
+                                      validation_data=validation_generator,
+                                      steps_per_epoch=num_training_samples / batch_size,
+                                      epochs=num_epochs,
+                                      callbacks=callback_list,
+                                      verbose=verbose,
+                                      shuffle=shuffle)
 
         # Save model via template_model (shares the same weights):
         model_template.save(model_path)
@@ -117,26 +117,33 @@ def main(argv):
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.legend(['train', 'test'], loc='upper left')
-        plt.savefig(os.path.join('saved_models', model_name + '_' + str(num_epochs)+ '.png'))
+        plt.savefig(os.path.join('saved_models', model_name + '_' + str(num_epochs) + '.png'))
 
         # evaluate training
         if learn_mode == 'train':
             learn_mode = 'evaluate'
 
-
+    ###############################
+    # Evaluate Model              #
+    ###############################
     if learn_mode == 'evaluate_only' or learn_mode == 'evaluate':
-        ###############################
-        # Evaluate Model              #
-        ###############################
         print("Evaluate model")
-        scores = model.evaluate_generator(validation_generator, num_validation_samples / batch_size,
-                                          workers=num_workers)
-        print("%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
+        scores = model.evaluate_generator(validation_generator, num_validation_samples / batch_size)
+        print("%s: %.2f%%" % (model.metrics_names[0], scores[0]))
+        print("ImageOut: %.2f%%" % (scores[1]))
+        print("Center_X: %.2f%%" % (scores[2]))
+        print("Center_Y: %.2f%%" % (scores[3]))
+        print("Semi_A: %.2f%%" % (scores[4]))
+        print("Semi_B: %.2f%%" % (scores[5]))
+        print("Sin: %.2f%%" % (scores[6]))
+        print("Cos: %.2f%%" % (scores[7]))
+        print("HC: %.2f%%" % (scores[8]))
+
         # predict model
         if learn_mode == 'evaluate':
-            learn_mode  = 'predict'
+            learn_mode = 'predict'
 
-    if learn_mode == 'predict' or learn_mode == 'predict_only':
+    if False and (learn_mode == 'predict' or learn_mode == 'predict_only'):
         ###############################
         # Predict Test                #
         ###############################
@@ -149,6 +156,7 @@ def main(argv):
     print("Delete model")
     del model, model_template
     print('***** FINISHED *****')
+
 
 if __name__ == "__main__":
     main(sys.argv)
