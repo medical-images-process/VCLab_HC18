@@ -23,7 +23,7 @@ def main(argv):
 
     ###############################
     # training parameter
-    num_epochs = 500
+    num_epochs = 20
     batch_size = 8
     shuffle = True
     lr = 0.0001
@@ -59,7 +59,7 @@ def main(argv):
     # details of the model
     # from keras.utils import plot_model
     # plot_model(model_template, to_file='model.png')
-    # model_template.summary()
+    model_template.summary()
 
     if learn_mode == 'return_from_checkpoint':
         print('Return from checkpoint: ' + return_checkpoint)
