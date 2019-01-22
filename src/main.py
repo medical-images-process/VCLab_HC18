@@ -14,7 +14,7 @@ def main(argv):
     # Parameters                  #
     ###############################
     # leran mode = train | return_from_checkpoint | evaluate_only | predict_only
-    learn_mode = 'train'
+    learn_mode = 'tt'
     input_shape = (540, 800, 1)
     pooling_mode = 'avg'
     image_transformer = {'reshape': input_shape[0:2], 'distanceTransform': True}

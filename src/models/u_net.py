@@ -14,7 +14,7 @@ def create_unet_512x512(input_shape=(512, 512, 1), pooling_mode='avg',
     inputs = Input(shape=input_shape)
     # 512x512x1
 
-    down0a = Conv2D(16, (3, 3), padding='same')(inputs)
+    down0a = Conv2D(16, (3, 3),input_shape=input_shape, padding='same')(inputs)
     down0a = Dropout(0.5)(down0a)
     down0a = LeakyReLU(alpha=0.1)(down0a)
     down0a = Conv2D(16, (3, 3), padding='same')(down0a)
