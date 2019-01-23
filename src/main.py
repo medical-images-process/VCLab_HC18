@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from src.predictor import predict
 from src.models.u_net import get_unet
 from src.dataLoader import DataGenerator
-from keras.callbacks import ModelCheckpoint
+from keras.callbacks import ModelCheckpoint, TensorBoard
 
 
 def main(argv):
@@ -23,10 +23,10 @@ def main(argv):
 
     ###############################
     # training parameter
-    num_epochs = 100
+    num_epochs = 50
     batch_size = 64
     shuffle = True
-    lr = 0.0001
+    lr = 0.001
     verbose = 1
 
     ###############################
@@ -95,7 +95,10 @@ def main(argv):
         file = "saved_models/checkpoints/ckp-{epoch:02d}-{val_loss:.2f}.hdf5"
         checkpoint = ModelCheckpoint(filepath=file, monitor='loss', verbose=verbose, mode='auto',
                                      save_best_only=True)
-        callback_list = [checkpoint]
+
+        # set up tensorboard
+        tensorboard = TensorBoard(log_dir='./Graph', histogram_freq=0, write_graph=True, write_images=True)
+        callback_list = [checkpoint, tensorboard]
 
         # train model
         print("Train model")
@@ -129,15 +132,15 @@ def main(argv):
     if learn_mode == 'evaluate_only' or learn_mode == 'evaluate':
         print("Evaluate model")
         scores = model.evaluate_generator(validation_generator, num_validation_samples / batch_size)
-        print("%s: %.2f%%" % (model.metrics_names[0], scores[0]))
-        print("ImageOut: %.2f%%" % (scores[1]))
-        print("Center_X: %.2f%%" % (scores[2]))
-        print("Center_Y: %.2f%%" % (scores[3]))
-        print("Semi_A: %.2f%%" % (scores[4]))
-        print("Semi_B: %.2f%%" % (scores[5]))
-        print("Sin: %.2f%%" % (scores[6]))
-        print("Cos: %.2f%%" % (scores[7]))
-        print("HC: %.2f%%" % (scores[8]))
+        # print("%s: %.2f%%" % (model.metrics_names[0], scores[0]))
+        # print("ImageOut: %.2f%%" % (scores[1]))
+        # print("Center_X: %.2f%%" % (scores[2]))
+        # print("Center_Y: %.2f%%" % (scores[3]))
+        # print("Semi_A: %.2f%%" % (scores[4]))
+        # print("Semi_B: %.2f%%" % (scores[5]))
+        # print("Sin: %.2f%%" % (scores[6]))
+        # print("Cos: %.2f%%" % (scores[7]))
+        # print("HC: %.2f%%" % (scores[8]))
 
         # predict model
         if learn_mode == 'evaluate':

@@ -28,6 +28,7 @@ def predict(model, path, csv_in, image_transformer):
             p = np.expand_dims(np.expand_dims(p, axis=3), axis=0)
             pimg, cx, cy, a, b, angle_sin, angle_cos, hc = model.predict_on_batch(p)
             cv2.imwrite(os.path.join(path, 'out', img_name), pimg[0, :, :, 0])
+
             cx = cx * rn_x + rn_x
             cy = cy * rn_y + rn_y
             a = a * rn_x + rn_x
