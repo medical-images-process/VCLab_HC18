@@ -15,15 +15,15 @@ def main(argv):
     ###############################
     # leran mode = train | return_from_checkpoint | evaluate_only | predict_only
     learn_mode = 'train'
-    input_shape = (135, 200, 1)
+    input_shape = (128, 192, 1)
     pooling_mode = 'avg'
-    image_transformer = {'reshape': input_shape[0:2], 'distanceTransform': True}
+    image_transformer = {'reshape': input_shape[0:2], 'distanceTransform': True, 'cut': True}
     model_name = 'unet_min_' + str(input_shape[0:2]).replace(' ', '').replace('(', '').replace(')', '').replace(',',
                                                                                                                 'x')
 
     ###############################
     # training parameter
-    num_epochs = 50
+    num_epochs = 1500
     batch_size = 64
     shuffle = True
     lr = 0.001

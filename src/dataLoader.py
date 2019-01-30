@@ -89,6 +89,8 @@ class DataGenerator(keras.utils.Sequence):
         # mormelize to [0,1]
         image = image.astype('float32') / 255
         # reshape image
+        if 'cut' in self.transform.keys() and self.transform['cut']:
+            image = image[14:523, 16:784]
         if 'reshape' in self.transform.keys():
             image = self.reshape(image, self.transform['reshape'])
         # fill ellipse
