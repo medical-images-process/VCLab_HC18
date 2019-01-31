@@ -82,7 +82,8 @@ class DataGenerator(keras.utils.Sequence):
         HC = np.transpose(np.array([(self.hc_frame.iloc[list_idx, 8] / self.hc_frame.iloc[list_idx, 1] - (
                 200 / self.hc_frame.iloc[list_idx, 1])) / (200 / self.hc_frame.iloc[list_idx, 1])]))
 
-        return X, [Y, CX, CY, A, B, SIN, COS, HC]
+        # return X, [Y, CX, CY, A, B, SIN, COS, HC]
+        return X, X
 
     # transformer for image augmentation
     def image_transformer(self, image, mode):
@@ -90,7 +91,7 @@ class DataGenerator(keras.utils.Sequence):
         image = image.astype('float32') / 255
         # reshape image
         if 'cut' in self.transform.keys() and self.transform['cut']:
-            image = image[14:523, 16:784]
+            image = image[14:526, 16:784]
         if 'reshape' in self.transform.keys():
             image = self.reshape(image, self.transform['reshape'])
         # fill ellipse

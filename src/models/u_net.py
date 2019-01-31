@@ -506,61 +506,60 @@ def create_unet_min_128x192(input_shape=(128, 192, 1), pooling_mode='avg',
     segmentation = Conv2D(num_classes, (1, 1), activation='sigmoid', bias_initializer='zeros')(up0)
     # Output layer (segmentation) -> 128x192x1
 
-    # ###########################################
-    # prediction of ellipse parameters
-    if pooling_mode == 'flatten':
-        from keras.layers import Flatten
-        ep4 = Flatten()(center)
-    if pooling_mode == 'avg':
-        from keras.layers import GlobalAveragePooling2D
-        ep4 = GlobalAveragePooling2D()(center)
-    if pooling_mode == 'max':
-        from keras.layers import GlobalMaxPooling2D
-        ep4 = GlobalMaxPooling2D()(center)
-
-    # ##########
-    ep3 = Dense(128)(ep4)
-    ep3 = BatchNormalization()(ep3)
-    ep3 = LeakyReLU(alpha=0.1)(ep3)
-    # ##########
-    ep2 = Dense(512)(ep3)
-    ep2 = BatchNormalization()(ep2)
-    ep2 = LeakyReLU(alpha=0.1)(ep2)
-    # ##########
-    ep1 = Dense(256)(ep2)
-    ep1 = BatchNormalization()(ep1)
-    ep1 = LeakyReLU(alpha=0.1)(ep1)
-    # ##########
-    ep_center_x = Dense(1, activation='tanh', bias_initializer='zeros')(ep1)
-    # Output (center_x) -> 1x1
-    # ##########
-    ep_center_y = Dense(1, activation='tanh', bias_initializer='zeros')(ep1)
-    # Output (center_y) -> 1x1
-    # ##########
-    ep_axis_a = Dense(1, activation='tanh', bias_initializer='zeros')(ep1)
-    # Output (semi_axis_a) -> 1x1
-    # ##########
-    ep_axis_b = Dense(1, activation='tanh', bias_initializer='zeros')(ep1)
-    # Output (semi_axis_b) -> 1x1
-    # ##########
-    ep_angle_sin = Dense(1, activation='tanh', bias_initializer='zeros')(ep1)
-    # Output (angle as sin) -> 1x1
-    # ##########
-    ep_angle_cos = Dense(1, activation='tanh', bias_initializer='zeros')(ep1)
-    # Output (angle as cos) -> 1x1
-    # ##########
-    ep_hc = Dense(1, activation='tanh', bias_initializer='zeros')(ep1)
-    # Output (hc) -> 1x1
-    # ##########
+    # # ###########################################
+    # # prediction of ellipse parameters
+    # if pooling_mode == 'flatten':
+    #     from keras.layers import Flatten
+    #     ep4 = Flatten()(center)
+    # if pooling_mode == 'avg':
+    #     from keras.layers import GlobalAveragePooling2D
+    #     ep4 = GlobalAveragePooling2D()(center)
+    # if pooling_mode == 'max':
+    #     from keras.layers import GlobalMaxPooling2D
+    #     ep4 = GlobalMaxPooling2D()(center)
+    #
+    # # ##########
+    # ep3 = Dense(128)(ep4)
+    # ep3 = BatchNormalization()(ep3)
+    # ep3 = LeakyReLU(alpha=0.1)(ep3)
+    # # ##########
+    # ep2 = Dense(512)(ep3)
+    # ep2 = BatchNormalization()(ep2)
+    # ep2 = LeakyReLU(alpha=0.1)(ep2)
+    # # ##########
+    # ep1 = Dense(256)(ep2)
+    # ep1 = BatchNormalization()(ep1)
+    # ep1 = LeakyReLU(alpha=0.1)(ep1)
+    # # ##########
+    # ep_center_x = Dense(1, activation='tanh', bias_initializer='zeros')(ep1)
+    # # Output (center_x) -> 1x1
+    # # ##########
+    # ep_center_y = Dense(1, activation='tanh', bias_initializer='zeros')(ep1)
+    # # Output (center_y) -> 1x1
+    # # ##########
+    # ep_axis_a = Dense(1, activation='tanh', bias_initializer='zeros')(ep1)
+    # # Output (semi_axis_a) -> 1x1
+    # # ##########
+    # ep_axis_b = Dense(1, activation='tanh', bias_initializer='zeros')(ep1)
+    # # Output (semi_axis_b) -> 1x1
+    # # ##########
+    # ep_angle_sin = Dense(1, activation='tanh', bias_initializer='zeros')(ep1)
+    # # Output (angle as sin) -> 1x1
+    # # ##########
+    # ep_angle_cos = Dense(1, activation='tanh', bias_initializer='zeros')(ep1)
+    # # Output (angle as cos) -> 1x1
+    # # ##########
+    # ep_hc = Dense(1, activation='tanh', bias_initializer='zeros')(ep1)
+    # # Output (hc) -> 1x1
+    # # ##########
 
     # build model with two outputs
     model = Model(inputs=inputs,
-                  outputs=[segmentation, ep_center_x, ep_center_y, ep_axis_a, ep_axis_b, ep_angle_sin, ep_angle_cos,
-                           ep_hc])
+                  outputs=segmentation)
 
     return model
 
-def creat_autoencoder(input_shape=(135, 200, 1), pooling_mode='avg',
+def creat_autoencoder(input_shape=(28, 28, 1), pooling_mode='avg',
                             num_classes=1):
     input_img = Input(shape=input_shape)  # adapt this if using `channels_first` image data format
 
@@ -577,7 +576,7 @@ def creat_autoencoder(input_shape=(135, 200, 1), pooling_mode='avg',
     x = UpSampling2D((2, 2))(x)
     x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
     x = UpSampling2D((2, 2))(x)
-    x = Conv2D(16, (3, 3), activation='relu', padding='same')(x)
+    x = Conv2D(16, (3, 3), activation='relu')(x)
     x = UpSampling2D((2, 2))(x)
     decoded = Conv2D(1, (3, 3), activation='sigmoid', padding='same')(x)
 
@@ -590,8 +589,10 @@ def creat_autoencoder(input_shape=(135, 200, 1), pooling_mode='avg',
 #
 def get_unet(model_name='unet_opt_512x512', input_shape=(512, 512, 1), pooling_mode='avg', num_classes=1, lr=0.01):
     print('Create model: ' + model_name)
-    model = globals()['create_' + model_name](input_shape=input_shape, pooling_mode=pooling_mode,
+    model = creat_autoencoder(input_shape=input_shape, pooling_mode=pooling_mode,
                                               num_classes=num_classes)
+    # model = globals()['create_' + model_name](input_shape=input_shape, pooling_mode=pooling_mode,
+    #                                           num_classes=num_classes)
 
     # parallelize model
     try:
@@ -601,12 +602,13 @@ def get_unet(model_name='unet_opt_512x512', input_shape=(512, 512, 1), pooling_m
         parallel_model = model
         print("Training using single GPU oder CPU...")
 
-    weights = np.ones(8)
-    weights[0] = 10
+    weights = np.ones(1)
+    weights[0] = 1
     weighted_loss = losses.class_weighted_cross_entropy_3(weights)
     # parallel_model.compile(optimizer=optimizers.RMSprop(lr=lr), loss=weighted_loss, metrics=[losses.dice_coeff])
     #optimizer = optimizers.SGD(lr=lr, momentum=0.9, decay=1e-4, nesterov=True, clipnorm=1.)
-    optimizer = optimizers.SGD(lr=lr, decay=1e-4, clipnorm=1.)
+    #optimizer = optimizers.SGD(lr=lr, decay=1e-4, clipnorm=1.)
+    optimizer = optimizers.Adadelta()
     parallel_model.compile(loss='mse', loss_weights=list(weights), optimizer=optimizer, metrics=['mse'])
     # parallel_model.compile(optimizer='adadelta', loss='binary_crossentropy')
 

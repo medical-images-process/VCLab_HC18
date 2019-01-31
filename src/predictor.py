@@ -26,19 +26,20 @@ def predict(model, path, csv_in, image_transformer):
             p = io.imread(os.path.join(os.path.join(path, 'set'), row[0]))
             p = transform.resize(p, image_transformer['reshape'][0:2])
             p = np.expand_dims(np.expand_dims(p, axis=3), axis=0)
-            pimg, cx, cy, a, b, angle_sin, angle_cos, hc = model.predict_on_batch(p)
+            # pimg, cx, cy, a, b, angle_sin, angle_cos, hc = model.predict_on_batch(p)
+            pimg = model.predict_on_batch(p)
             cv2.imwrite(os.path.join(path, 'out', img_name), pimg[0, :, :, 0])
 
-            cx = cx * rn_x + rn_x
-            cy = cy * rn_y + rn_y
-            a = a * rn_x + rn_x
-            b = b * rn_x + rn_x
-            hc = hc * rn_hc + rn_hc
-            angle_rad = np.arctan2(angle_sin, angle_cos)
-            writer.writerow([row[0]] +
-                            [str(round(cx[0][0] * pixel_mm, 9))] +
-                            [str(round(cy[0][0] * pixel_mm, 9))] +
-                            [str(round(a[0][0]  *pixel_mm, 9))] +
-                            [str(round(b[0][0] * pixel_mm, 9))] +
-                            [str(round(angle_rad[0][0], 9))] +
-                            [str(round(hc[0][0] * pixel_mm, 2))])
+            # cx = cx * rn_x + rn_x
+            # cy = cy * rn_y + rn_y
+            # a = a * rn_x + rn_x
+            # b = b * rn_x + rn_x
+            # hc = hc * rn_hc + rn_hc
+            # angle_rad = np.arctan2(angle_sin, angle_cos)
+            # writer.writerow([row[0]] +
+            #                 [str(round(cx[0][0] * pixel_mm, 9))] +
+            #                 [str(round(cy[0][0] * pixel_mm, 9))] +
+            #                 [str(round(a[0][0]  *pixel_mm, 9))] +
+            #                 [str(round(b[0][0] * pixel_mm, 9))] +
+            #                 [str(round(angle_rad[0][0], 9))] +
+            #                 [str(round(hc[0][0] * pixel_mm, 2))])

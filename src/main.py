@@ -13,34 +13,39 @@ def main(argv):
     ###############################
     # Parameters                  #
     ###############################
-    # leran mode = train | return_from_checkpoint | evaluate_only | predict_only
-    learn_mode = 'train'
-    input_shape = (128, 192, 1)
+    learn_mode = {
+        'load': True,
+        'train': True,
+        'evaluate': False,
+        'predict': True
+    }
+    input_shape = (28, 28, 1)
     pooling_mode = 'avg'
-    image_transformer = {'reshape': input_shape[0:2], 'distanceTransform': True, 'cut': True}
-    model_name = 'unet_min_' + str(input_shape[0:2]).replace(' ', '').replace('(', '').replace(')', '').replace(',',
-                                                                                                                'x')
+    image_transformer = {'reshape': input_shape[0:2], 'distanceTransform': False, 'cut': True}
 
     ###############################
     # training parameter
-    num_epochs = 1500
+    num_epochs = 3000
     batch_size = 64
-    shuffle = True
+    shuffle = False
     lr = 0.001
     verbose = 1
 
     ###############################
     #  paths
+    # model pathes
+    # model_name = 'unet_min_' + str(input_shape[0:2]).replace(' ', '').replace('(', '').replace(')', '').replace(',',
+    #                                                                                                             'x')
+    model_name = 'trained_model_mnist'
+    model_path = os.path.join(os.getcwd(),
+                              'saved_models/' + model_name + '.h5')
+    # train set path
     train_dataset_dir = os.path.join(os.getcwd(), "Dataset", "training")
     csv_file = os.path.join(train_dataset_dir, 'training.csv')
 
+    # test set path
     test_dataset_dir = os.path.join(os.getcwd(), 'Dataset/test')
     test_csv = os.path.join(train_dataset_dir, 'test_set_pixel_size.csv')
-
-    model_path = os.path.join(os.getcwd(),
-                              'saved_models/' + 'trained_model_' + model_name + '_' + str(num_epochs) + '_' + str(
-                                  lr) + '.h5')
-    return_checkpoint = os.path.join(os.getcwd(), 'saved_models/checkpoints/ckp-48-1.00.hdf5')
 
     ###############################
     #  dataset parameters
@@ -61,17 +66,11 @@ def main(argv):
     # plot_model(model_template, to_file='model.png')
     model_template.summary()
 
-    if learn_mode == 'return_from_checkpoint':
-        print('Return from checkpoint: ' + return_checkpoint)
-        model.load_weights(return_checkpoint)
-        # continue training
-        learn_mode = 'train'
-
-    if learn_mode == 'predict_only' or learn_mode == "evaluate":
-        print('Predictions on model: ' + model_path)
+    if learn_mode['load']:
+        print('Load saved parameters: ' + model_path)
         model_template.load_weights(model_path)
 
-    if learn_mode == 'train' or learn_mode == 'train_only':
+    if learn_mode['train']:
         ###############################
         # Load Dataset                #
         ###############################
@@ -106,13 +105,13 @@ def main(argv):
                                       validation_data=validation_generator,
                                       steps_per_epoch=num_training_samples / batch_size,
                                       epochs=num_epochs,
-                                      callbacks=callback_list,
+
                                       verbose=verbose,
                                       shuffle=shuffle)
 
         # Save model via template_model (shares the same weights):
         model_template.save(model_path)
-        print("Model saved to disk")
+        print("Model saved to disk: " + model_path)
 
         plt.plot(history.history['loss'])
         plt.plot(history.history['val_loss'])
@@ -122,14 +121,10 @@ def main(argv):
         plt.legend(['train', 'test'], loc='upper left')
         plt.savefig(os.path.join('saved_models', model_name + '_' + str(num_epochs) + '.png'))
 
-        # evaluate training
-        if learn_mode == 'train':
-            learn_mode = 'evaluate'
-
     ###############################
     # Evaluate Model              #
     ###############################
-    if learn_mode == 'evaluate_only' or learn_mode == 'evaluate':
+    if learn_mode['evaluate']:
         print("Evaluate model")
         scores = model.evaluate_generator(validation_generator, num_validation_samples / batch_size)
         # print("%s: %.2f%%" % (model.metrics_names[0], scores[0]))
@@ -142,11 +137,8 @@ def main(argv):
         # print("Cos: %.2f%%" % (scores[7]))
         # print("HC: %.2f%%" % (scores[8]))
 
-        # predict model
-        if learn_mode == 'evaluate':
-            learn_mode = 'predict'
 
-    if learn_mode == 'predict' or learn_mode == 'predict_only':
+    if learn_mode['predict']:
         ###############################
         # Predict Test                #
         ###############################
