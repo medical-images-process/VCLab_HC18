@@ -22,13 +22,13 @@ def predict(model, path, csv_in, image_transformer):
         for row in reader:
             # print('...' + row[0])
             pixel_mm = float(row[1])
-            img_name = row[0].replace('.png', '_Predicted.png')
+            img_name = row[0].replace('.png', '_Predicted_seg.png')
             p = io.imread(os.path.join(os.path.join(path, 'set'), row[0]))
             p = transform.resize(p, image_transformer['reshape'][0:2])
             p = np.expand_dims(np.expand_dims(p, axis=3), axis=0)
             # pimg, cx, cy, a, b, angle_sin, angle_cos, hc = model.predict_on_batch(p)
             pimg = model.predict_on_batch(p)
-            cv2.imwrite(os.path.join(path, 'out', img_name), pimg[0, :, :, 0])
+            cv2.imwrite(os.path.join(path, 'out', img_name), pimg[0, :, :, 0] * 255)
 
             # cx = cx * rn_x + rn_x
             # cy = cy * rn_y + rn_y

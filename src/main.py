@@ -15,28 +15,28 @@ def main(argv):
     ###############################
     learn_mode = {
         'load': True,
-        'train': True,
+        'train': False,
         'evaluate': False,
         'predict': True
     }
-    input_shape = (28, 28, 1)
+    input_shape = (128, 192, 1)
     pooling_mode = 'avg'
     image_transformer = {'reshape': input_shape[0:2], 'distanceTransform': False, 'cut': True}
 
     ###############################
     # training parameter
     num_epochs = 3000
-    batch_size = 64
+    batch_size = 128
     shuffle = False
     lr = 0.001
     verbose = 1
 
     ###############################
     #  paths
-    # model pathes
-    # model_name = 'unet_min_' + str(input_shape[0:2]).replace(' ', '').replace('(', '').replace(')', '').replace(',',
-    #                                                                                                             'x')
-    model_name = 'trained_model_mnist'
+    # model paths
+    model_name = 'unet_min_' + str(input_shape[0:2]).replace(' ', '').replace('(', '').replace(')', '').replace(',',
+                                                                                                                'x')
+    # model_name = 'trained_model_mnist'
     model_path = os.path.join(os.getcwd(),
                               'saved_models/' + model_name + '.h5')
     # train set path
@@ -64,7 +64,7 @@ def main(argv):
     # details of the model
     # from keras.utils import plot_model
     # plot_model(model_template, to_file='model.png')
-    model_template.summary()
+    # model_template.summary()
 
     if learn_mode['load']:
         print('Load saved parameters: ' + model_path)

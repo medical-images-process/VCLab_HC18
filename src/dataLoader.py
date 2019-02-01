@@ -83,7 +83,7 @@ class DataGenerator(keras.utils.Sequence):
                 200 / self.hc_frame.iloc[list_idx, 1])) / (200 / self.hc_frame.iloc[list_idx, 1])]))
 
         # return X, [Y, CX, CY, A, B, SIN, COS, HC]
-        return X, X
+        return X, Y
 
     # transformer for image augmentation
     def image_transformer(self, image, mode):

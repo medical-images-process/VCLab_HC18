@@ -589,10 +589,10 @@ def creat_autoencoder(input_shape=(28, 28, 1), pooling_mode='avg',
 #
 def get_unet(model_name='unet_opt_512x512', input_shape=(512, 512, 1), pooling_mode='avg', num_classes=1, lr=0.01):
     print('Create model: ' + model_name)
-    model = creat_autoencoder(input_shape=input_shape, pooling_mode=pooling_mode,
-                                              num_classes=num_classes)
-    # model = globals()['create_' + model_name](input_shape=input_shape, pooling_mode=pooling_mode,
+    # model = creat_autoencoder(input_shape=input_shape, pooling_mode=pooling_mode,
     #                                           num_classes=num_classes)
+    model = globals()['create_' + model_name](input_shape=input_shape, pooling_mode=pooling_mode,
+                                              num_classes=num_classes)
 
     # parallelize model
     try:
