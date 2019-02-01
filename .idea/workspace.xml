@@ -1,8 +1,196 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f67fb5ec-df49-40e4-96f0-60411591934a" name="Default Changelist" comment="Dropout vs BachNormalization">
+    <list default="true" id="f67fb5ec-df49-40e4-96f0-60411591934a" name="Default Changelist" comment="Load existing model">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/test-volume.tif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train-labels.tif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train-volume.tif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_0_6144147.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_0_9312159.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_10_4725015.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_10_6658724.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_11_7305766.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_11_9762238.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_12_4186302.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_12_4486064.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_13_3027714.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_13_8372481.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_14_3602105.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_14_8620165.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_15_7797249.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_15_7856748.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_16_7404918.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_16_9397072.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_17_3911616.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_17_5677330.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_18_1533065.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_18_7670894.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_19_2043583.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_19_5366147.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_1_9323655.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_1_9353417.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_20_3601991.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_20_7053067.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_21_3732585.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_21_8506147.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_22_1880892.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_22_2808126.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_23_833746.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_23_9704808.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_24_7854683.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_24_7890115.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_25_32689.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_25_6277072.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_26_3928388.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_26_8717052.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_27_1760328.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_27_2952813.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_28_1813420.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_28_3604435.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_29_6023041.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_29_8617811.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_2_4218729.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_2_4242621.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_3_3355733.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_3_6123244.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_4_4272795.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_4_9292489.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_5_2683761.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_5_555502.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_6_5544540.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_6_5592345.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_7_236371.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_7_9599882.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_8_3936874.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_8_4974953.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_9_6936014.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/image_9_7535981.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_0_6144147.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_0_9312159.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_10_4725015.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_10_6658724.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_11_7305766.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_11_9762238.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_12_4186302.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_12_4486064.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_13_3027714.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_13_8372481.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_14_3602105.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_14_8620165.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_15_7797249.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_15_7856748.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_16_7404918.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_16_9397072.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_17_3911616.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_17_5677330.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_18_1533065.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_18_7670894.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_19_2043583.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_19_5366147.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_1_9323655.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_1_9353417.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_20_3601991.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_20_7053067.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_21_3732585.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_21_8506147.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_22_1880892.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_22_2808126.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_23_833746.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_23_9704808.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_24_7854683.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_24_7890115.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_25_32689.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_25_6277072.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_26_3928388.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_26_8717052.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_27_1760328.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_27_2952813.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_28_1813420.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_28_3604435.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_29_6023041.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_29_8617811.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_2_4218729.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_2_4242621.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_3_3355733.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_3_6123244.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_4_4272795.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_4_9292489.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_5_2683761.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_5_555502.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_6_5544540.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_6_5592345.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_7_236371.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_7_9599882.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_8_3936874.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_8_4974953.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_9_6936014.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/aug/mask_9_7535981.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/1.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/10.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/11.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/12.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/13.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/14.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/15.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/16.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/17.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/18.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/19.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/2.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/20.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/21.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/22.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/23.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/24.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/25.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/26.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/27.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/28.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/29.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/3.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/4.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/5.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/6.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/7.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/8.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/image/9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/1.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/10.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/11.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/12.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/13.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/14.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/15.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/16.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/17.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/18.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/19.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/2.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/20.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/21.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/22.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/23.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/24.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/25.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/26.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/27.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/28.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/29.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/3.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/4.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/5.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/6.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/7.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/8.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/membrane/train/label/9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/img_test.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/test.py" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Dataset/training/results.csv" afterPath="$PROJECT_DIR$/src/Dataset/training/results.csv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dataLoader.py" afterPath="$PROJECT_DIR$/src/dataLoader.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.py" afterPath="$PROJECT_DIR$/src/main.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/models/u_net.py" afterPath="$PROJECT_DIR$/src/models/u_net.py" />
     </list>
@@ -14,9 +202,12 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/VCLab_HC18$testfile.coverage" NAME="testfile Coverage Results" MODIFIED="1543486193124" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/VCLab_HC18$img_test.coverage" NAME="img_test Coverage Results" MODIFIED="1549013002937" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/VCLab_HC18$testfile.coverage" NAME="testfile Coverage Results" MODIFIED="1548839209729" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/VCLab_HC18$Nosetests_in_test_py.coverage" NAME="Nosetests in img_tester.py Coverage Results" MODIFIED="1548839374388" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/VCLab_HC18$ttt.coverage" NAME="ttt Coverage Results" MODIFIED="1548431648839" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/VCLab_HC18$ellipseCircumference.coverage" NAME="ellipseCircumference Coverage Results" MODIFIED="1546944389340" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
-    <SUITE FILE_PATH="coverage/VCLab_HC18$main.coverage" NAME="main Coverage Results" MODIFIED="1548143986380" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/VCLab_HC18$main.coverage" NAME="main Coverage Results" MODIFIED="1549015241341" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FUSProjectUsageTrigger">
@@ -54,11 +245,33 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="49" column="34" lean-forward="false" selection-start-line="49" selection-start-column="34" selection-end-line="49" selection-end-column="34" />
+            <state relative-caret-position="136">
+              <caret line="8" column="33" lean-forward="true" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="data.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/data.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="408">
+              <caret line="42" column="18" lean-forward="false" selection-start-line="42" selection-start-column="4" selection-end-line="42" selection-end-column="18" />
+              <folding>
+                <element signature="e#0#37#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="testfile.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/testfile.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1190">
+              <caret line="70" column="27" lean-forward="false" selection-start-line="70" selection-start-column="27" selection-end-line="70" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -67,25 +280,22 @@
       <file leaf-file-name="dataLoader.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/dataLoader.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1326">
-              <caret line="84" column="36" lean-forward="false" selection-start-line="84" selection-start-column="36" selection-end-line="84" selection-end-column="36" />
+            <state relative-caret-position="284">
+              <caret line="109" column="57" lean-forward="false" selection-start-line="109" selection-start-column="57" selection-end-line="109" selection-end-column="57" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
-                <marker date="1548142612328" expanded="true" signature="167:4580" ph="..." />
-                <marker date="1548142612328" expanded="true" signature="1505:1514" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="u_net.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="u_net.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/models/u_net.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="4" lean-forward="true" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="79" />
+            <state relative-caret-position="17">
+              <caret line="1" column="5" lean-forward="false" selection-start-line="1" selection-start-column="5" selection-end-line="1" selection-end-column="5" />
               <folding>
-                <element signature="e#0#18#0" expanded="true" />
-                <marker date="1548144661014" expanded="true" signature="14697:14748" ph="..." />
+                <marker date="1549015221632" expanded="true" signature="9320:9353" ph="..." />
               </folding>
             </state>
           </provider>
@@ -94,10 +304,11 @@
       <file leaf-file-name="predictor.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/predictor.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="561">
-              <caret line="33" column="23" lean-forward="false" selection-start-line="33" selection-start-column="23" selection-end-line="33" selection-end-column="23" />
+            <state relative-caret-position="578">
+              <caret line="35" column="23" lean-forward="false" selection-start-line="35" selection-start-column="23" selection-end-line="35" selection-end-column="23" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
+                <marker date="1549012737355" expanded="true" signature="2076:2130" ph="..." />
               </folding>
             </state>
           </provider>
@@ -107,7 +318,19 @@
         <entry file="file://$PROJECT_DIR$/src/ellipseCircumference.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="306">
-              <caret line="24" column="13" lean-forward="false" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
+              <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="49" selection-end-column="53" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="img_test.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/img_test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="782">
+              <caret line="46" column="34" lean-forward="false" selection-start-line="46" selection-start-column="34" selection-end-line="46" selection-end-column="34" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -145,6 +368,11 @@
       <find>create_unet_opt_800x540</find>
       <find>unet_opt_800x540</find>
       <find>BatchNormalization()</find>
+      <find>optimizer</find>
+      <find>print</find>
+      <find>ch</find>
+      <find>COLOR_DICT</find>
+      <find>ImageDataGenerator</find>
     </findStrings>
     <replaceStrings>
       <replace>(2)</replace>
@@ -164,11 +392,16 @@
         <option value="$PROJECT_DIR$/src/testfile.py" />
         <option value="$PROJECT_DIR$/src/models/__init__.py" />
         <option value="$PROJECT_DIR$/src/ellipseCircumference.py" />
-        <option value="$PROJECT_DIR$/src/dataLoader.py" />
         <option value="$PROJECT_DIR$/src/predictor.py" />
         <option value="$PROJECT_DIR$/src/layers/generalPooling.py" />
-        <option value="$PROJECT_DIR$/src/main.py" />
+        <option value="$PROJECT_DIR$/ttt.py" />
+        <option value="$PROJECT_DIR$/src/test.py" />
+        <option value="$PROJECT_DIR$/src/img_tester.py" />
+        <option value="$PROJECT_DIR$/src/dataLoader.py" />
+        <option value="$PROJECT_DIR$/src/img_test.py" />
+        <option value="$PROJECT_DIR$/src/data.py" />
         <option value="$PROJECT_DIR$/src/models/u_net.py" />
+        <option value="$PROJECT_DIR$/src/main.py" />
       </list>
     </option>
   </component>
@@ -226,6 +459,28 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="VCLab_HC18" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="VCLab_HC18" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="data" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="membrane" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scratches" />
@@ -233,7 +488,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/unet-master" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="PyDebuggerOptionsProvider">
@@ -257,6 +512,7 @@
           <PATH vcs="Git" revision="">$PROJECT_DIR$/src/main.py</PATH>
           <PATH vcs="Git" revision="">$PROJECT_DIR$/src/models/u_net.py</PATH>
           <PATH vcs="Git" revision="">$PROJECT_DIR$/src/predictor.py</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/src/testfile.py</PATH>
         </FILE-GROUP>
         <FILE-GROUP>
           <option name="myUpdateName" value="Created" />
@@ -264,7 +520,7 @@
           <option name="mySupportsDeletion" value="false" />
           <option name="myCanBeAbsent" value="false" />
           <option name="myId" value="CREATED" />
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/src/saved_models/.gitignore</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/src/models/autoencoder.py</PATH>
         </FILE-GROUP>
         <FILE-GROUP>
           <option name="myUpdateName" value="Deleted" />
@@ -385,25 +641,6 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <method />
     </configuration>
-    <configuration default="false" name="ellipseCircumference" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="VCLab_HC18" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/ellipseCircumference.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <method />
-    </configuration>
     <configuration default="false" name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -418,6 +655,61 @@
       <module name="VCLab_HC18" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Nosetests in img_tester.py" type="tests" factoryName="Nosetests" temporary="true" nameIsGenerated="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="VCLab_HC18" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="_new_regexPattern" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/src/img_tester.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method />
+    </configuration>
+    <configuration default="false" name="ttt" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\danielc\AppData\Local\Continuum\anaconda3\envs\HC18\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="VCLab_HC18" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ttt.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="img_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\danielc\AppData\Local\Continuum\anaconda3\envs\HC18\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="VCLab_HC18" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/img_test.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -572,16 +864,20 @@
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method />
     </configuration>
-    <list size="3">
+    <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.testfile" />
-      <item index="1" class="java.lang.String" itemvalue="Python.ellipseCircumference" />
-      <item index="2" class="java.lang.String" itemvalue="Python.main" />
+      <item index="1" class="java.lang.String" itemvalue="Python.main" />
+      <item index="2" class="java.lang.String" itemvalue="Python tests.Nosetests in img_tester.py" />
+      <item index="3" class="java.lang.String" itemvalue="Python.ttt" />
+      <item index="4" class="java.lang.String" itemvalue="Python.img_test" />
     </list>
     <recent_temporary>
-      <list size="3">
+      <list size="5">
         <item index="0" class="java.lang.String" itemvalue="Python.main" />
-        <item index="1" class="java.lang.String" itemvalue="Python.ellipseCircumference" />
-        <item index="2" class="java.lang.String" itemvalue="Python.testfile" />
+        <item index="1" class="java.lang.String" itemvalue="Python.img_test" />
+        <item index="2" class="java.lang.String" itemvalue="Python tests.Nosetests in img_tester.py" />
+        <item index="3" class="java.lang.String" itemvalue="Python.testfile" />
+        <item index="4" class="java.lang.String" itemvalue="Python.ttt" />
       </list>
     </recent_temporary>
   </component>
@@ -690,12 +986,44 @@
       <option name="project" value="LOCAL" />
       <updated>1548143859200</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Load existing model">
+      <created>1548144690249</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1548144690249</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
+  </component>
+  <component name="TestHistory">
+    <history-entry file="Nosetests_in_img_tester_py - 2019.01.30 at 10h 09m 34s.xml">
+      <configuration name="Nosetests in img_tester.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Nosetests_in_test_py - 2019.01.25 at 16h 30m 02s.xml">
+      <configuration name="Nosetests in test.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Nosetests_in_test_py - 2019.01.25 at 16h 30m 26s.xml">
+      <configuration name="Nosetests in test.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Nosetests_in_test_py - 2019.01.25 at 16h 31m 01s.xml">
+      <configuration name="Nosetests in test.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Nosetests_in_test_py - 2019.01.25 at 16h 32m 39s.xml">
+      <configuration name="Nosetests in test.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Nosetests_in_test_py - 2019.01.30 at 10h 07m 23s.xml">
+      <configuration name="Nosetests in test.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Nosetests_in_test_py - 2019.01.30 at 10h 08m 49s.xml">
+      <configuration name="Nosetests in test.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Nosetests_in_test_py - 2019.01.30 at 10h 09m 12s.xml">
+      <configuration name="Nosetests in test.py" configurationId="tests" />
+    </history-entry>
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15208334" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -754,15 +1082,21 @@
     <MESSAGE value="new model for original input size of samples (540x800)" />
     <MESSAGE value="Train only on one GPU" />
     <MESSAGE value="Dropout vs BachNormalization" />
-    <option name="LAST_COMMIT_MESSAGE" value="Dropout vs BachNormalization" />
+    <MESSAGE value="Load existing model" />
+    <option name="LAST_COMMIT_MESSAGE" value="Load existing model" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/predictor.py</url>
-          <line>36</line>
+          <line>35</line>
           <option name="timeStamp" value="60" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/img_test.py</url>
+          <line>45</line>
+          <option name="timeStamp" value="67" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -772,9 +1106,13 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="63" />
+      <option name="time" value="68" />
     </breakpoint-manager>
-    <watches-manager />
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="x" language="Python" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
@@ -853,107 +1191,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/dataLoader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1309">
-          <caret line="83" column="59" lean-forward="true" selection-start-line="83" selection-start-column="59" selection-end-line="83" selection-end-column="59" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-            <marker date="1548142612328" expanded="true" signature="167:4580" ph="..." />
-            <marker date="1548142612328" expanded="true" signature="1505:1514" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/models/u_net.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2499">
-          <caret line="152" column="8" lean-forward="true" selection-start-line="152" selection-start-column="8" selection-end-line="152" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <marker date="1548144661014" expanded="true" signature="14697:14748" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/predictor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="25" column="20" lean-forward="false" selection-start-line="25" selection-start-column="20" selection-end-line="25" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/ellipseCircumference.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1360">
-          <caret line="86" column="0" lean-forward="true" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dataLoader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1258">
-          <caret line="80" column="45" lean-forward="true" selection-start-line="80" selection-start-column="45" selection-end-line="80" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-            <marker date="1548142612328" expanded="true" signature="167:4580" ph="..." />
-            <marker date="1548142612328" expanded="true" signature="1505:1514" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/predictor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/models/u_net.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2465">
-          <caret line="150" column="131" lean-forward="false" selection-start-line="150" selection-start-column="131" selection-end-line="150" selection-end-column="131" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <marker date="1548144661014" expanded="true" signature="14697:14748" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="27" column="13" lean-forward="false" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dataLoader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1343">
-          <caret line="84" column="38" lean-forward="false" selection-start-line="84" selection-start-column="38" selection-end-line="84" selection-end-column="38" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-            <marker date="1548142612328" expanded="true" signature="167:4580" ph="..." />
-            <marker date="1548142612328" expanded="true" signature="1505:1514" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/parallel_model_save.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1513">
@@ -966,8 +1203,7 @@
         <state relative-caret-position="1955">
           <caret line="121" column="40" lean-forward="false" selection-start-line="121" selection-start-column="40" selection-end-line="121" selection-end-column="40" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <marker date="1548144661014" expanded="true" signature="14697:14748" ph="..." />
+            <marker date="1549015221632" expanded="true" signature="9320:9353" ph="..." />
           </folding>
         </state>
       </provider>
@@ -986,8 +1222,6 @@
           <caret line="77" column="89" lean-forward="false" selection-start-line="77" selection-start-column="89" selection-end-line="77" selection-end-column="89" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <marker date="1548142612328" expanded="true" signature="167:4580" ph="..." />
-            <marker date="1548142612328" expanded="true" signature="1505:1514" ph="..." />
           </folding>
         </state>
       </provider>
@@ -997,8 +1231,7 @@
         <state relative-caret-position="7514">
           <caret line="448" column="40" lean-forward="false" selection-start-line="448" selection-start-column="40" selection-end-line="448" selection-end-column="40" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <marker date="1548144661014" expanded="true" signature="14697:14748" ph="..." />
+            <marker date="1549015221632" expanded="true" signature="9320:9353" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1017,8 +1250,6 @@
           <caret line="77" column="89" lean-forward="false" selection-start-line="77" selection-start-column="89" selection-end-line="77" selection-end-column="89" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <marker date="1548142612328" expanded="true" signature="167:4580" ph="..." />
-            <marker date="1548142612328" expanded="true" signature="1505:1514" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1028,8 +1259,7 @@
         <state relative-caret-position="7616">
           <caret line="448" column="40" lean-forward="false" selection-start-line="448" selection-start-column="40" selection-end-line="448" selection-end-column="40" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <marker date="1548144661014" expanded="true" signature="14697:14748" ph="..." />
+            <marker date="1549015221632" expanded="true" signature="9320:9353" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1048,8 +1278,6 @@
           <caret line="77" column="89" lean-forward="false" selection-start-line="77" selection-start-column="89" selection-end-line="77" selection-end-column="89" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <marker date="1548142612328" expanded="true" signature="167:4580" ph="..." />
-            <marker date="1548142612328" expanded="true" signature="1505:1514" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1059,8 +1287,7 @@
         <state relative-caret-position="7514">
           <caret line="448" column="40" lean-forward="false" selection-start-line="448" selection-start-column="40" selection-end-line="448" selection-end-column="40" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <marker date="1548144661014" expanded="true" signature="14697:14748" ph="..." />
+            <marker date="1549015221632" expanded="true" signature="9320:9353" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1094,8 +1321,6 @@
           <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <marker date="1548142612328" expanded="true" signature="167:4580" ph="..." />
-            <marker date="1548142612328" expanded="true" signature="1505:1514" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1105,8 +1330,7 @@
         <state relative-caret-position="7803">
           <caret line="465" column="0" lean-forward="false" selection-start-line="465" selection-start-column="0" selection-end-line="465" selection-end-column="0" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <marker date="1548144661014" expanded="true" signature="14697:14748" ph="..." />
+            <marker date="1549015221632" expanded="true" signature="9320:9353" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1125,8 +1349,6 @@
           <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <marker date="1548142612328" expanded="true" signature="167:4580" ph="..." />
-            <marker date="1548142612328" expanded="true" signature="1505:1514" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1136,8 +1358,7 @@
         <state relative-caret-position="7803">
           <caret line="465" column="0" lean-forward="false" selection-start-line="465" selection-start-column="0" selection-end-line="465" selection-end-column="0" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <marker date="1548144661014" expanded="true" signature="14697:14748" ph="..." />
+            <marker date="1549015221632" expanded="true" signature="9320:9353" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1156,8 +1377,6 @@
           <caret line="44" column="0" lean-forward="true" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <marker date="1548142612328" expanded="true" signature="167:4580" ph="..." />
-            <marker date="1548142612328" expanded="true" signature="1505:1514" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1167,20 +1386,12 @@
         <state relative-caret-position="7803">
           <caret line="465" column="0" lean-forward="true" selection-start-line="465" selection-start-column="0" selection-end-line="465" selection-end-column="0" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <marker date="1548144661014" expanded="true" signature="14697:14748" ph="..." />
+            <marker date="1549015221632" expanded="true" signature="9320:9353" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/AppData/Local/conda/conda/envs/env_HC18/Lib/site-packages/tensorflow/python/framework/ops.py" />
-    <entry file="file://$PROJECT_DIR$/src/testfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="366">
-          <caret line="58" column="52" lean-forward="true" selection-start-line="58" selection-start-column="52" selection-end-line="58" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/conda/conda/envs/env_HC18/Lib/site-packages/pandas/core/generic.py" />
     <entry file="file://$USER_HOME$/AppData/Local/conda/conda/envs/env_HC18/Lib/multiprocessing/pool.py" />
     <entry file="file://$USER_HOME$/AppData/Local/conda/conda/envs/env_HC18/Lib/site-packages/skimage/io/_plugins/pil_plugin.py" />
@@ -1203,16 +1414,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/ellipseCircumference.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="24" column="13" lean-forward="false" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="691">
@@ -1223,8 +1424,109 @@
     <entry file="file://$PROJECT_DIR$/src/layers/generalPooling.py" />
     <entry file="file://$PROJECT_DIR$/src/predictor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="561">
-          <caret line="33" column="23" lean-forward="false" selection-start-line="33" selection-start-column="23" selection-end-line="33" selection-end-column="23" />
+        <state relative-caret-position="578">
+          <caret line="35" column="23" lean-forward="false" selection-start-line="35" selection-start-column="23" selection-end-line="35" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+            <marker date="1549012737355" expanded="true" signature="2076:2130" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Downloads/Telegram Desktop/marrnet25D.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Downloads/Telegram Desktop/thesis/marrnet25D.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-255">
+          <caret line="60" column="65" lean-forward="true" selection-start-line="60" selection-start-column="65" selection-end-line="60" selection-end-column="65" />
+          <folding>
+            <element signature="e#0#12#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Downloads/Telegram Desktop/thesis/trainer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="18" column="52" lean-forward="false" selection-start-line="18" selection-start-column="50" selection-end-line="18" selection-end-column="52" />
+          <folding>
+            <element signature="e#0#9#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Downloads/Telegram Desktop/thesis/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="41" column="5" lean-forward="true" selection-start-line="41" selection-start-column="5" selection-end-line="41" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#9#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pycharm/_jb_nosetest_runner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ttt.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="27" column="27" lean-forward="true" selection-start-line="27" selection-start-column="27" selection-end-line="27" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Downloads/u_net.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="317">
+          <caret line="501" column="40" lean-forward="true" selection-start-line="501" selection-start-column="40" selection-end-line="501" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#39#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/img_tester.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/testfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1190">
+          <caret line="70" column="27" lean-forward="false" selection-start-line="70" selection-start-column="27" selection-end-line="70" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ellipseCircumference.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="49" selection-end-column="53" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/img_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="782">
+          <caret line="46" column="34" lean-forward="false" selection-start-line="46" selection-start-column="34" selection-end-line="46" selection-end-column="34" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
@@ -1233,32 +1535,39 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dataLoader.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1326">
-          <caret line="84" column="36" lean-forward="false" selection-start-line="84" selection-start-column="36" selection-end-line="84" selection-end-column="36" />
+        <state relative-caret-position="284">
+          <caret line="109" column="57" lean-forward="false" selection-start-line="109" selection-start-column="57" selection-end-line="109" selection-end-column="57" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <marker date="1548142612328" expanded="true" signature="167:4580" ph="..." />
-            <marker date="1548142612328" expanded="true" signature="1505:1514" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="42" column="18" lean-forward="false" selection-start-line="42" selection-start-column="4" selection-end-line="42" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/models/u_net.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="5" lean-forward="false" selection-start-line="1" selection-start-column="5" selection-end-line="1" selection-end-column="5" />
+          <folding>
+            <marker date="1549015221632" expanded="true" signature="9320:9353" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="49" column="34" lean-forward="false" selection-start-line="49" selection-start-column="34" selection-end-line="49" selection-end-column="34" />
+        <state relative-caret-position="136">
+          <caret line="8" column="33" lean-forward="true" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/models/u_net.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="4" lean-forward="true" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="79" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <marker date="1548144661014" expanded="true" signature="14697:14748" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>

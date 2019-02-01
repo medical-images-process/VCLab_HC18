@@ -1,419 +1,61 @@
 import numpy as np
-from src.models import losses
+from models import losses
 from keras import optimizers
 from keras.models import Model
 from keras.utils import multi_gpu_model
-from keras.layers import Input, concatenate, Conv2D, Dense, MaxPooling2D, UpSampling2D, BatchNormalization, LeakyReLU, Add
+from keras.layers import Input, concatenate, Conv2D, Dense, MaxPooling2D, UpSampling2D, BatchNormalization, LeakyReLU, Dropout
 
 
-# ===========================================================================
-# \brief Symmetric Unet for shapes 512,512
-#
-def create_unet_512x512(input_shape=(512, 512, 1), pooling_mode='avg',
+def create_unet_256x256(input_shape=(256, 256, 1), pooling_mode='avg',
                         num_classes=1):
-    inputs = Input(shape=input_shape)
-    # 512x512x1
+    inputs = Input(input_shape)
+    conv1 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(inputs)
+    conv1 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv1)
+    pool1 = MaxPooling2D(pool_size=(2, 2))(conv1)
+    conv2 = Conv2D(128, 3, activation='relu', padding='same', kernel_initializer='he_normal')(pool1)
+    conv2 = Conv2D(128, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv2)
+    pool2 = MaxPooling2D(pool_size=(2, 2))(conv2)
+    conv3 = Conv2D(256, 3, activation='relu', padding='same', kernel_initializer='he_normal')(pool2)
+    conv3 = Conv2D(256, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv3)
+    pool3 = MaxPooling2D(pool_size=(2, 2))(conv3)
+    conv4 = Conv2D(512, 3, activation='relu', padding='same', kernel_initializer='he_normal')(pool3)
+    conv4 = Conv2D(512, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv4)
+    drop4 = Dropout(0.5)(conv4)
+    pool4 = MaxPooling2D(pool_size=(2, 2))(drop4)
 
-    down0a = Conv2D(16, (3, 3),input_shape=input_shape, padding='same')(inputs)
-    down0a = BatchNormalization()(down0a)
-    down0a = LeakyReLU(alpha=0.1)(down0a)
-    down0a = Conv2D(16, (3, 3), padding='same')(down0a)
-    down0a = BatchNormalization()(down0a)
-    down0a = LeakyReLU(alpha=0.1)(down0a)
-    down0a_pool = MaxPooling2D((2, 2), strides=(2, 2))(down0a)
-    # 256x256x16
+    conv5 = Conv2D(1024, 3, activation='relu', padding='same', kernel_initializer='he_normal')(pool4)
+    conv5 = Conv2D(1024, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv5)
+    drop5 = Dropout(0.5)(conv5)
 
-    down0 = Conv2D(32, (3, 3), padding='same')(down0a_pool)
-    down0 = BatchNormalization()(down0)
-    down0 = LeakyReLU(alpha=0.1)(down0)
-    down0 = Conv2D(32, (3, 3), padding='same')(down0)
-    down0 = BatchNormalization()(down0)
-    down0 = LeakyReLU(alpha=0.1)(down0)
-    down0_pool = MaxPooling2D((2, 2), strides=(2, 2))(down0)
-    # 128x128x32
+    up6 = Conv2D(512, 2, activation='relu', padding='same', kernel_initializer='he_normal')(
+        UpSampling2D(size=(2, 2))(drop5))
+    merge6 = concatenate([drop4, up6], axis=3)
+    conv6 = Conv2D(512, 3, activation='relu', padding='same', kernel_initializer='he_normal')(merge6)
+    conv6 = Conv2D(512, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv6)
 
-    down1 = Conv2D(64, (3, 3), padding='same')(down0_pool)
-    down1 = BatchNormalization()(down1)
-    down1 = LeakyReLU(alpha=0.1)(down1)
-    down1_pool = MaxPooling2D((2, 2), strides=(2, 2))(down1)
-    # 64x64x64
+    up7 = Conv2D(256, 2, activation='relu', padding='same', kernel_initializer='he_normal')(
+        UpSampling2D(size=(2, 2))(conv6))
+    merge7 = concatenate([conv3, up7], axis=3)
+    conv7 = Conv2D(256, 3, activation='relu', padding='same', kernel_initializer='he_normal')(merge7)
+    conv7 = Conv2D(256, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv7)
 
-    down2 = Conv2D(128, (3, 3), padding='same')(down1_pool)
-    down2 = BatchNormalization()(down2)
-    down2 = LeakyReLU(alpha=0.1)(down2)
-    down2_pool = MaxPooling2D((2, 2), strides=(2, 2))(down2)
-    # 32x32x128
+    up8 = Conv2D(128, 2, activation='relu', padding='same', kernel_initializer='he_normal')(
+        UpSampling2D(size=(2, 2))(conv7))
+    merge8 = concatenate([conv2, up8], axis=3)
+    conv8 = Conv2D(128, 3, activation='relu', padding='same', kernel_initializer='he_normal')(merge8)
+    conv8 = Conv2D(128, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv8)
 
-    down3 = Conv2D(256, (3, 3), padding='same')(down2_pool)
-    down3 = BatchNormalization()(down3)
-    down3 = LeakyReLU(alpha=0.1)(down3)
-    down3_pool = MaxPooling2D((2, 2), strides=(2, 2))(down3)
-    # 16x16x256
+    up9 = Conv2D(64, 2, activation='relu', padding='same', kernel_initializer='he_normal')(
+        UpSampling2D(size=(2, 2))(conv8))
+    merge9 = concatenate([conv1, up9], axis=3)
+    conv9 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(merge9)
+    conv9 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv9)
+    conv9 = Conv2D(2, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv9)
+    conv10 = Conv2D(1, 1, activation='sigmoid')(conv9)
 
-    down4 = Conv2D(512, (3, 3), padding='same')(down3_pool)
-    down4 = BatchNormalization()(down4)
-    down4 = LeakyReLU(alpha=0.1)(down4)
-    down4_pool = MaxPooling2D((2, 2), strides=(2, 2))(down4)
-    # 8x8x512
+    model = Model(input=inputs, output=conv10)
 
-    center = Conv2D(1024, (3, 3), padding='same')(down4_pool)
-    center = BatchNormalization()(center)
-    center = LeakyReLU(alpha=0.1)(center)
-    # center 8x8x1024
-
-    up4 = UpSampling2D((2, 2))(center)
-    up4 = concatenate([down4, up4], axis=3)
-    up4 = Conv2D(512, (3, 3), padding='same')(up4)
-    up4 = BatchNormalization()(up4)
-    up4 = LeakyReLU(alpha=0.1)(up4)
-    # 16x16x512
-
-    up3 = UpSampling2D((2, 2))(up4)
-    up3 = concatenate([down3, up3], axis=3)
-    up3 = Conv2D(256, (3, 3), padding='same')(up3)
-    up3 = BatchNormalization()(up3)
-    up3 = LeakyReLU(alpha=0.1)(up3)
-    # 32x32x256
-
-    up2 = UpSampling2D((2, 2))(up3)
-    up2 = concatenate([down2, up2], axis=3)
-    up2 = Conv2D(128, (3, 3), padding='same')(up2)
-    up2 = BatchNormalization()(up2)
-    up2 = LeakyReLU(alpha=0.1)(up2)
-    # 64x64x128
-
-    up1 = UpSampling2D((2, 2))(up2)
-    up1 = concatenate([down1, up1], axis=3)
-    up1 = Conv2D(64, (3, 3), padding='same')(up1)
-    up1 = BatchNormalization()(up1)
-    up1 = LeakyReLU(alpha=0.1)(up1)
-    # 128x128x64
-
-    up0 = UpSampling2D((2, 2))(up1)
-    up0 = concatenate([down0, up0], axis=3)
-    up0 = Conv2D(32, (3, 3), padding='same')(up0)
-    up0 = BatchNormalization()(up0)
-    up0 = LeakyReLU(alpha=0.1)(up0)
-    up0 = Conv2D(32, (3, 3), padding='same')(up0)
-    up0 = BatchNormalization()(up0)
-    up0 = LeakyReLU(alpha=0.1)(up0)
-    # 256x256x32
-
-    up0a = UpSampling2D((2, 2))(up0)
-    up0a = concatenate([down0a, up0a], axis=3)
-    up0a = Conv2D(16, (3, 3), padding='same')(up0a)
-    up0a = BatchNormalization()(up0a)
-    up0a = LeakyReLU(alpha=0.1)(up0a)
-    up0a = Conv2D(16, (3, 3), padding='same')(up0a)
-    up0a = BatchNormalization()(up0a)
-    up0a = LeakyReLU(alpha=0.1)(up0a)
-    # 512x512x16
-
-    segmentation = Conv2D(num_classes, (1, 1), activation='softmax')(up0a)
-    # Output layer (segmentation) -> 512x512x3
-
-    # prediction of ellipse parameters
-    if pooling_mode == 'flatten':
-        from keras.layers import Flatten
-        ep4 = Flatten()(center)
-    if pooling_mode == 'avg':
-        from keras.layers import GlobalAveragePooling2D
-        ep4 = GlobalAveragePooling2D()(center)
-    if pooling_mode == 'max':
-        from keras.layers import GlobalMaxPooling2D
-        ep4 = GlobalMaxPooling2D()(center)
-
-    ep3 = Dense(128)(ep4)
-    ep3 = BatchNormalization()(ep3)
-    ep3 = LeakyReLU(alpha=0.1)(ep3)
-
-    ep2 = Dense(512)(ep3)
-    ep2 = BatchNormalization()(ep2)
-    ep2 = LeakyReLU(alpha=0.1)(ep2)
-
-    ep1 = Dense(256)(ep2)
-    ep1 = BatchNormalization()(ep1)
-    ep1 = LeakyReLU(alpha=0.1)(ep1)
-
-    ep_center_x = Dense(1, activation='relu')(ep1)
-    # Output (center_x) -> 1x1
-
-    ep_center_y = Dense(1, activation='relu')(ep1)
-    # Output (center_y) -> 1x1
-
-    ep_axis_a = Dense(1, activation='relu')(ep1)
-    # Output (semi_axis_a) -> 1x1
-
-    ep_axis_b = Dense(1, activation='relu')(ep1)
-    # Output (semi_axis_b) -> 1x1
-
-    ep_angle_sin = Dense(1, activation='tanh')(ep1)
-    # Output (angle as sin) -> 1x1
-
-    ep_angle_cos = Dense(1, activation='tanh')(ep1)
-    # Output (angle as cos) -> 1x1
-
-    ep_hc = Dense(1, activation='relu')(ep1)
-    # Output (hc) -> 1x1
-
-    # build model with two outputs
-    model = Model(inputs=inputs,
-                  outputs=[segmentation, ep_center_x, ep_center_y, ep_axis_a, ep_axis_b, ep_angle_sin, ep_angle_cos,
-                           ep_hc])
     return model
-
-
-# ===========================================================================
-# \brief Symmetric Unet for shapes 512,512 with minimized numbers of parameter
-#
-def create_unet_min_512x512(input_shape=(512, 512, 1), pooling_mode='avg',
-                            num_classes=1):
-    # ##########
-    inputs = Input(shape=input_shape)
-    # 512x512x1
-    # ##########
-    down0 = Conv2D(16, (3, 3), padding='same')(inputs)
-    down0 = BatchNormalization()(down0)
-    down0 = LeakyReLU(alpha=0.1)(down0)
-
-    down0 = Conv2D(16, (3, 3), padding='same')(down0)
-    down0 = BatchNormalization()(down0)
-    down0 = LeakyReLU(alpha=0.1)(down0)
-
-    down0 = Conv2D(32, (3, 3), padding='same')(down0)
-    down0 = BatchNormalization()(down0)
-    down0 = LeakyReLU(alpha=0.1)(down0)
-
-    down0_pool = MaxPooling2D((2, 2), strides=(4, 4))(down0)
-    # ##########
-    # 128x128x32
-    # ##########
-    down1 = Conv2D(64, (3, 3), padding='same')(down0_pool)
-    down1 = BatchNormalization()(down1)
-    down1 = LeakyReLU(alpha=0.1)(down1)
-
-    down1 = Conv2D(128, (3, 3), padding='same')(down1)
-    down1 = BatchNormalization()(down1)
-    down1 = LeakyReLU(alpha=0.1)(down1)
-
-    down1_pool = MaxPooling2D((2, 2), strides=(4, 4))(down1)
-    # ##########
-    # 32x32x128
-    # ##########
-    down2 = Conv2D(256, (3, 3), padding='same')(down1_pool)
-    down2 = BatchNormalization()(down2)
-    down2 = LeakyReLU(alpha=0.1)(down2)
-
-    down2_pool = MaxPooling2D((2, 2), strides=(4, 4))(down2)
-    # ##########
-    # 8x8x512
-
-    center = Conv2D(512, (3, 3), padding='same')(down2_pool)
-    center = BatchNormalization()(center)
-    center = LeakyReLU(alpha=0.1)(center)
-    # center 8x8x1024
-
-    up2 = UpSampling2D((4, 4))(center)
-    up2 = concatenate([down2, up2], axis=3)
-    up2 = Conv2D(256, (3, 3), padding='same')(up2)
-    up2 = BatchNormalization()(up2)
-    up2 = LeakyReLU(alpha=0.1)(up2)
-    # 32x32x256
-
-    up1 = UpSampling2D((4, 4))(up2)
-    up1 = concatenate([down1, up1], axis=3)
-    up1 = Conv2D(64, (3, 3), padding='same')(up1)
-    up1 = BatchNormalization()(up1)
-    up1 = LeakyReLU(alpha=0.1)(up1)
-    # 128x128x64
-
-    up0 = UpSampling2D((4, 4))(up1)
-    up0 = concatenate([down0, up0], axis=3)
-    up0 = Conv2D(32, (3, 3), padding='same')(up0)
-    up0 = BatchNormalization()(up0)
-    up0 = LeakyReLU(alpha=0.1)(up0)
-    up0 = Conv2D(16, (3, 3), padding='same')(up0)
-    up0 = BatchNormalization()(up0)
-    up0 = LeakyReLU(alpha=0.1)(up0)
-    up0 = Conv2D(16, (3, 3), padding='same')(up0)
-    up0 = BatchNormalization()(up0)
-    up0 = LeakyReLU(alpha=0.1)(up0)
-    # 512x512x16
-
-    segmentation = Conv2D(num_classes, (1, 1), activation='softmax')(up0)
-    # Output layer (segmentation) -> 512x512x3
-
-    # prediction of ellipse parameters
-    if pooling_mode == 'flatten':
-        from keras.layers import Flatten
-        ep4 = Flatten()(center)
-    if pooling_mode == 'avg':
-        from keras.layers import GlobalAveragePooling2D
-        ep4 = GlobalAveragePooling2D()(center)
-    if pooling_mode == 'max':
-        from keras.layers import GlobalMaxPooling2D
-        ep4 = GlobalMaxPooling2D()(center)
-
-    ep3 = Dense(128)(ep4)
-    ep3 = BatchNormalization()(ep3)
-    ep3 = LeakyReLU(alpha=0.1)(ep3)
-
-    ep2 = Dense(512)(ep3)
-    ep2 = BatchNormalization()(ep2)
-    ep2 = LeakyReLU(alpha=0.1)(ep2)
-
-    ep1 = Dense(256)(ep2)
-    ep1 = BatchNormalization()(ep1)
-    ep1 = LeakyReLU(alpha=0.1)(ep1)
-
-    ep_center_x = Dense(1, activation='relu')(ep1)
-    # Output (center_x) -> 1x1
-
-    ep_center_y = Dense(1, activation='relu')(ep1)
-    # Output (center_y) -> 1x1
-
-    ep_axis_a = Dense(1, activation='relu')(ep1)
-    # Output (semi_axis_a) -> 1x1
-
-    ep_axis_b = Dense(1, activation='relu')(ep1)
-    # Output (semi_axis_b) -> 1x1
-
-    ep_angle_sin = Dense(1, activation='tanh')(ep1)
-    # Output (angle as sin) -> 1x1
-
-    ep_angle_cos = Dense(1, activation='tanh')(ep1)
-    # Output (angle as cos) -> 1x1
-
-    ep_hc = Dense(1, activation='relu')(ep1)
-    # Output (hc) -> 1x1
-
-    # build model with two outputs
-    model = Model(inputs=inputs,
-                  outputs=[segmentation, ep_center_x, ep_center_y, ep_axis_a, ep_axis_b, ep_angle_sin, ep_angle_cos,
-                           ep_hc])
-    return model
-
-
-# ===========================================================================
-# \brief Symmetric Unet for shapes 800,540 with minimized numbers of parameter
-#
-def create_unet_min_540x800(input_shape=(540, 800, 1), pooling_mode='avg',
-                            num_classes=1):
-    inputs = Input(shape=input_shape)
-    # 800x540x1
-
-    down0 = Conv2D(16, (3, 3), padding='same')(inputs)
-    down0 = BatchNormalization()(down0)
-    down0 = LeakyReLU(alpha=0.1)(down0)
-    down0 = Conv2D(16, (3, 3), padding='same')(down0)
-    down0 = BatchNormalization()(down0)
-    down0 = LeakyReLU(alpha=0.1)(down0)
-    down0 = Conv2D(16, (3, 3), padding='same')(down0)
-    down0 = BatchNormalization()(down0)
-    down0 = LeakyReLU(alpha=0.1)(down0)
-    down0_pool = MaxPooling2D((2, 2), strides=(6, 4))(down0)
-    # 128x128x32
-
-    down1 = Conv2D(64, (3, 3), padding='same')(down0_pool)
-    down1 = BatchNormalization()(down1)
-    down1 = LeakyReLU(alpha=0.1)(down1)
-    down1 = Conv2D(128, (3, 3), padding='same')(down1)
-    down1 = BatchNormalization()(down1)
-    down1 = LeakyReLU(alpha=0.1)(down1)
-    down1_pool = MaxPooling2D((2, 2), strides=(6, 4))(down1)
-    # 32x32x128
-
-    down2 = Conv2D(256, (3, 3), padding='same')(down1_pool)
-    down2 = BatchNormalization()(down2)
-    down2 = LeakyReLU(alpha=0.1)(down2)
-    down2_pool = MaxPooling2D((2, 2), strides=(3, 2))(down2)
-    # 8x8x512
-
-    center = Conv2D(1024, (3, 3), padding='same')(down2_pool)
-    center = BatchNormalization()(center)
-    center = LeakyReLU(alpha=0.1)(center)
-    # center 8x8x1024
-
-    up2 = UpSampling2D((3, 2))(center)
-    up2 = concatenate([down2, up2], axis=3)
-    up2 = Conv2D(256, (3, 3), padding='same')(up2)
-    up2 = BatchNormalization()(up2)
-    up2 = LeakyReLU(alpha=0.1)(up2)
-    # 32x32x256
-
-    up1 = UpSampling2D((6, 4))(up2)
-    up1 = concatenate([down1, up1], axis=3)
-    up1 = Conv2D(64, (3, 3), padding='same')(up1)
-    up1 = BatchNormalization()(up1)
-    up1 = LeakyReLU(alpha=0.1)(up1)
-    # 128x128x64
-
-    up0 = UpSampling2D((6, 4))(up1)
-    up0 = concatenate([down0, up0], axis=3)
-    up0 = Conv2D(32, (3, 3), padding='same')(up0)
-    up0 = BatchNormalization()(up0)
-    up0 = LeakyReLU(alpha=0.1)(up0)
-    up0 = Conv2D(32, (3, 3), padding='same')(up0)
-    up0 = BatchNormalization()(up0)
-    up0 = LeakyReLU(alpha=0.1)(up0)
-    up0 = Conv2D(32, (3, 3), padding='same')(up0)
-    up0 = BatchNormalization()(up0)
-    up0 = LeakyReLU(alpha=0.1)(up0)
-    # 512x512x16
-
-    segmentation = Conv2D(num_classes, (1, 1), activation='softmax', bias_initializer='zeros')(up0)
-    # Output layer (segmentation) -> 512x512x3
-
-    # prediction of ellipse parameters
-    if pooling_mode == 'flatten':
-        from keras.layers import Flatten
-        ep4 = Flatten()(center)
-    if pooling_mode == 'avg':
-        from keras.layers import GlobalAveragePooling2D
-        ep4 = GlobalAveragePooling2D()(center)
-    if pooling_mode == 'max':
-        from keras.layers import GlobalMaxPooling2D
-        ep4 = GlobalMaxPooling2D()(center)
-
-    ep3 = Dense(128)(ep4)
-    ep3 = BatchNormalization()(ep3)
-    ep3 = LeakyReLU(alpha=0.1)(ep3)
-
-    ep2 = Dense(512)(ep3)
-    ep2 = BatchNormalization()(ep2)
-    ep2 = LeakyReLU(alpha=0.1)(ep2)
-
-    ep1 = Dense(256)(ep2)
-    ep1 = BatchNormalization()(ep1)
-    ep1 = LeakyReLU(alpha=0.1)(ep1)
-
-    ep_center_x = Dense(1, activation='relu', bias_initializer='zeros')(ep1)
-    # Output (center_x) -> 1x1
-
-    ep_center_y = Dense(1, activation='relu', bias_initializer='zeros')(ep1)
-    # Output (center_y) -> 1x1
-
-    ep_axis_a = Dense(1, activation='relu', bias_initializer='zeros')(ep1)
-    # Output (semi_axis_a) -> 1x1
-
-    ep_axis_b = Dense(1, activation='relu', bias_initializer='zeros')(ep1)
-    # Output (semi_axis_b) -> 1x1
-
-    ep_angle_sin = Dense(1, activation='tanh', bias_initializer='zeros')(ep1)
-    # Output (angle as sin) -> 1x1
-
-    ep_angle_cos = Dense(1, activation='tanh', bias_initializer='zeros')(ep1)
-    # Output (angle as cos) -> 1x1
-
-    ep_hc = Dense(1, activation='relu', bias_initializer='zeros')(ep1)
-    # Output (hc) -> 1x1
-
-    # build model with two outputs
-    model = Model(inputs=inputs,
-                  outputs=[segmentation, ep_center_x, ep_center_y, ep_axis_a, ep_axis_b, ep_angle_sin, ep_angle_cos,
-                           ep_hc])
-    return model
-
 # ===========================================================================
 # \brief Symmetric Unet for shapes 800,540 with minimized numbers of parameter
 #
@@ -559,38 +201,11 @@ def create_unet_min_128x192(input_shape=(128, 192, 1), pooling_mode='avg',
 
     return model
 
-def creat_autoencoder(input_shape=(28, 28, 1), pooling_mode='avg',
-                            num_classes=1):
-    input_img = Input(shape=input_shape)  # adapt this if using `channels_first` image data format
-
-    x = Conv2D(16, (3, 3), activation='relu', padding='same')(input_img)
-    x = MaxPooling2D((2, 2), padding='same')(x)
-    x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
-    x = MaxPooling2D((2, 2), padding='same')(x)
-    x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
-    encoded = MaxPooling2D((2, 2), padding='same')(x)
-
-    # at this point the representation is (4, 4, 8) i.e. 128-dimensional
-
-    x = Conv2D(8, (3, 3), activation='relu', padding='same')(encoded)
-    x = UpSampling2D((2, 2))(x)
-    x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
-    x = UpSampling2D((2, 2))(x)
-    x = Conv2D(16, (3, 3), activation='relu')(x)
-    x = UpSampling2D((2, 2))(x)
-    decoded = Conv2D(1, (3, 3), activation='sigmoid', padding='same')(x)
-
-    autoencoder = Model(input_img, decoded)
-
-    return autoencoder
-
 # ===========================================================================
 # \brief Returns a symmetric Unet model arcitecture
 #
 def get_unet(model_name='unet_opt_512x512', input_shape=(512, 512, 1), pooling_mode='avg', num_classes=1, lr=0.01):
     print('Create model: ' + model_name)
-    # model = creat_autoencoder(input_shape=input_shape, pooling_mode=pooling_mode,
-    #                                           num_classes=num_classes)
     model = globals()['create_' + model_name](input_shape=input_shape, pooling_mode=pooling_mode,
                                               num_classes=num_classes)
 
@@ -605,11 +220,8 @@ def get_unet(model_name='unet_opt_512x512', input_shape=(512, 512, 1), pooling_m
     weights = np.ones(1)
     weights[0] = 1
     weighted_loss = losses.class_weighted_cross_entropy_3(weights)
-    # parallel_model.compile(optimizer=optimizers.RMSprop(lr=lr), loss=weighted_loss, metrics=[losses.dice_coeff])
-    #optimizer = optimizers.SGD(lr=lr, momentum=0.9, decay=1e-4, nesterov=True, clipnorm=1.)
-    #optimizer = optimizers.SGD(lr=lr, decay=1e-4, clipnorm=1.)
-    optimizer = optimizers.Adadelta()
-    parallel_model.compile(loss='mse', loss_weights=list(weights), optimizer=optimizer, metrics=['mse'])
-    # parallel_model.compile(optimizer='adadelta', loss='binary_crossentropy')
+
+    parallel_model.compile(optimizer=optimizers.Adam(lr=1e-4), loss='binary_crossentropy', metrics=['accuracy'])
+
 
     return model, parallel_model

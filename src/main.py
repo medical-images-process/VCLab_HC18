@@ -3,9 +3,11 @@ import sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from src.predictor import predict
-from src.models.u_net import get_unet
-from src.dataLoader import DataGenerator
+
+from data import *
+#from predictor import predict
+from models.u_net import get_unet
+#from dataLoader import DataGenerator
 from keras.callbacks import ModelCheckpoint, TensorBoard
 
 
@@ -14,19 +16,19 @@ def main(argv):
     # Parameters                  #
     ###############################
     learn_mode = {
-        'load': True,
-        'train': False,
+        'load': False,
+        'train': True,
         'evaluate': False,
         'predict': True
     }
-    input_shape = (128, 192, 1)
+    input_shape = (256, 256, 1)
     pooling_mode = 'avg'
     image_transformer = {'reshape': input_shape[0:2], 'distanceTransform': False, 'cut': True}
 
     ###############################
     # training parameter
     num_epochs = 3000
-    batch_size = 128
+    batch_size = 64
     shuffle = False
     lr = 0.001
     verbose = 1
@@ -34,7 +36,7 @@ def main(argv):
     ###############################
     #  paths
     # model paths
-    model_name = 'unet_min_' + str(input_shape[0:2]).replace(' ', '').replace('(', '').replace(')', '').replace(',',
+    model_name = 'unet_' + str(input_shape[0:2]).replace(' ', '').replace('(', '').replace(')', '').replace(',',
                                                                                                                 'x')
     # model_name = 'trained_model_mnist'
     model_path = os.path.join(os.getcwd(),
@@ -64,7 +66,7 @@ def main(argv):
     # details of the model
     # from keras.utils import plot_model
     # plot_model(model_template, to_file='model.png')
-    # model_template.summary()
+    model_template.summary()
 
     if learn_mode['load']:
         print('Load saved parameters: ' + model_path)
@@ -79,14 +81,22 @@ def main(argv):
             'train': np.arange(num_training_samples),
             'validate': (len_set - 1) - np.arange(num_validation_samples)}
 
-        training_generator = DataGenerator(partition['train'], csv_file=csv_file,
-                                           root_dir=os.path.join(train_dataset_dir, 'set'),
-                                           batch_size=batch_size, transform=image_transformer)
+        # training_generator = DataGenerator(partition['train'], csv_file=csv_file,
+        #                                    root_dir=os.path.join(train_dataset_dir, 'set'),
+        #                                    batch_size=batch_size, transform=image_transformer)
+        #
+        # validation_generator = DataGenerator(partition['validate'], csv_file=csv_file,
+        #                                      root_dir=os.path.join(train_dataset_dir, 'set'),
+        #                                      batch_size=batch_size, transform=image_transformer)
 
-        validation_generator = DataGenerator(partition['validate'], csv_file=csv_file,
-                                             root_dir=os.path.join(train_dataset_dir, 'set'),
-                                             batch_size=batch_size, transform=image_transformer)
-
+        data_gen_args = dict(rotation_range=0.2,
+                             width_shift_range=0.05,
+                             height_shift_range=0.05,
+                             shear_range=0.05,
+                             zoom_range=0.05,
+                             horizontal_flip=True,
+                             fill_mode='nearest')
+        training_generator = trainGenerator(2,'data/membrane/train','image','label',data_gen_args,save_to_dir = None)
         ###############################
         # Train Model                 #
         ###############################
@@ -101,32 +111,34 @@ def main(argv):
 
         # train model
         print("Train model")
-        history = model.fit_generator(generator=training_generator,
-                                      validation_data=validation_generator,
-                                      steps_per_epoch=num_training_samples / batch_size,
-                                      epochs=num_epochs,
-
-                                      verbose=verbose,
-                                      shuffle=shuffle)
+        model_checkpoint = ModelCheckpoint('unet_membrane.hdf5', monitor='loss', verbose=1, save_best_only=True)
+        model.fit_generator(training_generator, steps_per_epoch=300, epochs=1, callbacks=[model_checkpoint])
+        # history = model.fit_generator(generator=training_generator,
+        #                               validation_data=validation_generator,
+        #                               steps_per_epoch=num_training_samples / batch_size,
+        #                               epochs=num_epochs,
+        #
+        #                               verbose=verbose,
+        #                               shuffle=shuffle)
 
         # Save model via template_model (shares the same weights):
         model_template.save(model_path)
         print("Model saved to disk: " + model_path)
 
-        plt.plot(history.history['loss'])
-        plt.plot(history.history['val_loss'])
-        plt.title('model loss')
-        plt.ylabel('loss')
-        plt.xlabel('epoch')
-        plt.legend(['train', 'test'], loc='upper left')
-        plt.savefig(os.path.join('saved_models', model_name + '_' + str(num_epochs) + '.png'))
+        # plt.plot(history.history['loss'])
+        # plt.plot(history.history['val_loss'])
+        # plt.title('model loss')
+        # plt.ylabel('loss')
+        # plt.xlabel('epoch')
+        # plt.legend(['train', 'test'], loc='upper left')
+        # plt.savefig(os.path.join('saved_models', model_name + '_' + str(num_epochs) + '.png'))
 
     ###############################
     # Evaluate Model              #
     ###############################
     if learn_mode['evaluate']:
         print("Evaluate model")
-        scores = model.evaluate_generator(validation_generator, num_validation_samples / batch_size)
+        # scores = model.evaluate_generator(validation_generator, num_validation_samples / batch_size)
         # print("%s: %.2f%%" % (model.metrics_names[0], scores[0]))
         # print("ImageOut: %.2f%%" % (scores[1]))
         # print("Center_X: %.2f%%" % (scores[2]))
@@ -143,7 +155,10 @@ def main(argv):
         # Predict Test                #
         ###############################
         print('Predict...')
-        predict(model=model, path=train_dataset_dir, csv_in=csv_file, image_transformer=image_transformer)
+        testGene = testGenerator("data/membrane/test")
+        results = model.predict_generator(testGene, 30, verbose=1)
+        saveResult("data/membrane/test", results)
+        # predict(model=model, path=train_dataset_dir, csv_in=csv_file, image_transformer=image_transformer)
 
     ###############################
     # Delete the  Model           #

@@ -48,22 +48,26 @@ class DataGenerator(keras.utils.Sequence):
 
     def __data_generation(self, list_idx):
         # read input image x
+        ANNOTATION = np.array([self.image_transformer(
+                np.expand_dims(io.imread(os.path.join(self.root_dir, file_name)), axis=3), 'annotation') for file_name
+                in
+                self.hc_frame.iloc[list_idx, 0].str.replace('.png', '_Annotation.png')])
+
+        DISTANCE_TRANSFORM = np.array([self.image_transformer(
+                np.expand_dims(io.imread(os.path.join(self.root_dir, file_name)), axis=3), 'distanceTransform') for
+                file_name in
+                self.hc_frame.iloc[list_idx, 0].str.replace('.png', '_DistanceTransform.png')])
+
         X = np.array([self.image_transformer(
             np.expand_dims(io.imread(os.path.join(self.root_dir, file_name)), axis=3), 'image') for file_name in
             self.hc_frame.iloc[list_idx, 0]])
         # Output annotation or distance transformation
         if 'distanceTransform' in self.transform.keys() and self.transform['distanceTransform']:
             # read output image y
-            Y = np.array([self.image_transformer(
-                np.expand_dims(io.imread(os.path.join(self.root_dir, file_name)), axis=3), 'distanceTransform') for
-                file_name in
-                self.hc_frame.iloc[list_idx, 0].str.replace('.png', '_DistanceTransform.png')])
+            Y = DISTANCE_TRANSFORM
         else:
             # read output image y
-            Y = np.array([self.image_transformer(
-                np.expand_dims(io.imread(os.path.join(self.root_dir, file_name)), axis=3), 'annotation') for file_name
-                in
-                self.hc_frame.iloc[list_idx, 0].str.replace('.png', '_Annotation.png')])
+            Y = ANNOTATION
 
         # Ellipse parameter to numpy array normelized to [1, -1]
         # center_x_pixel = center_x_mm / pixel_mm
@@ -109,4 +113,31 @@ class DataGenerator(keras.utils.Sequence):
         else:
             return img
 
+    def select_area_of_interesst(self, img, annotation):
+        import cv2
+        inv = cv2.bitwise_not(annotation)
+        dist = cv2.distanceTransform(inv, cv2.DIST_L2, 5)
+        img_map = dist < 25
+        img = sp_noise(img, img_map, 0.3)
+        return img
 
+
+def sp_noise(image,img_map,prob):
+    '''
+    Add salt and pepper noise to image
+    prob: Probability of the noise
+    '''
+    import random
+    output = np.zeros(image.shape,np.uint8)
+    thres = 1 - prob
+    for i in range(image.shape[0]):
+        for j in range(image.shape[1]):
+            rdn = random.random()
+            if rdn < prob:
+                output[i][j] = 0
+            elif rdn > thres:
+                output[i][j] = 255
+            else:
+                output[i][j] = image[i][j]
+    output[map] = image[img_map]
+    return output
