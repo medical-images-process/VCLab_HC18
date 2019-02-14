@@ -266,7 +266,7 @@ def get_unet(model_name='unet_256x256', input_shape=(256, 256, 1), pooling_mode=
 
     weights = np.ones(1)
     weights[0] = 1
-    loss = ['binary_crossentropy', 'mse', 'mse', 'mse', 'mse', 'mse', 'mse', 'mse']
+    loss = ['binary_crossentropy', 'mse', 'mae', 'mae', 'mae', 'mae', 'mae', 'mae']
 
     parallel_model.compile(optimizer=optimizers.Adam(lr=lr), loss=loss, metrics=['accuracy'])
 

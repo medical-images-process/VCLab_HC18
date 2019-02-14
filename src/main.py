@@ -24,13 +24,13 @@ def main(argv):
         'evaluate': False,
         'predict': True
     }
-    data_mode = 'annotation'
+    data_mode = 'inv'
     input_shape = (256, 384, 1)
     pooling_mode = 'avg'
 
     ###############################
     # training parameter
-    num_epochs = 1
+    num_epochs = 30
     batch_size = 2
     steps_per_epoch = 1000
     lr = 1e-4
@@ -83,6 +83,15 @@ def main(argv):
         ################################################################################################################
         # Load Dataset                #
         print("Load dataset")
+        # data_gen_args = dict(rotation_range=0.2,
+        #                     width_shift_range=0.05,
+        #                     height_shift_range=0.05,
+        #                     shear_range=0.05,
+        #                     zoom_range=0.05,
+        #                     horizontal_flip=True,
+        #                     fill_mode='nearest')
+        # training_generator = preTrainGenerator(2, 'data/membrane/train', 'image', 'label', data_gen_args, save_to_dir=None)
+
         data_gen_args = dict(rotation_range=0.2,
                              width_shift_range=0.05,
                              height_shift_range=0.05,
@@ -129,14 +138,13 @@ def main(argv):
     ####################################################################################################################
     if learn_mode['predict']:
         print('Predict...')
-        # csv_file = os.path.join(test_dataset_dir, 'test_set_pixel_size.csv')
-        csv_file = os.path.join(train_dataset_dir, 'training.csv')
-        # testdf = pd.read_csv(os.path.join(test_dataset_dir, 'test_set_pixel_size.csv'))
-        # len_set = int(len(testdf))
-        # testGene = testGenerator("Dataset/test/image")
-        # results = model.predict_generator(testGene, len_set, verbose=1)
-        # saveResult("Dataset/test/", normelizer, results)
-        predict(model=model, path=train_dataset_dir,
+        # testGene = preTestGenerator("data/membrane/test")
+        # results = model.predict_generator(testGene, 30, verbose=1)
+        # preSaveResult("data/membrane/test", results[0])
+        csv_file = os.path.join(test_dataset_dir, 'test_set_pixel_size.csv')
+        # csv_file = os.path.join(train_dataset_dir, 'training.csv')
+
+        predict(model=model, path=test_dataset_dir,
                 csv_in=csv_file, norm=normelizer)
 
         ################################################################################################################
@@ -150,7 +158,7 @@ def main(argv):
 def prepareParameter(df, norm):
     df['annotation'] = df['filename'].replace('_HC.png', '_HC_annotation.png')
     df['distanceTransform'] = df['filename'].replace('_HC.png', '_HC_distanceTransform.png')
-    df['hc'] = ((df['head circumference (mm)'] / df['pixel size(mm)'] - norm['hc']) / norm['hc']) / norm["scale"]
+    df['hc'] = ((df['head circumference (mm)'] / df['pixel size(mm)']  / norm["scale"])- norm['hc']) / norm['hc']
     df['cx'] = ((df['center_x_mm'] / df['pixel size(mm)'] / norm["scale"]) - norm['cx']) / norm['cx']
     df['cy'] = ((df['center_y_mm'] / df['pixel size(mm)'] / norm["scale"]) - norm['cy']) / norm['cy']
     df['sa'] = ((df['semi_axes_a_mm'] / df['pixel size(mm)'] / norm["scale"]) - norm['sa']) / norm['sa']

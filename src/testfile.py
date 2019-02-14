@@ -5,7 +5,7 @@ import numpy as np
 from skimage import io, transform
 
 path = os.path.join(os.getcwd(), "Dataset", "test")
-csv_in = os.path.join(path, 'result.csv')
+csv_in = os.path.join(path, 'results.csv')
 
 with open(csv_in, "rt") as infile:
     reader = csv.reader(infile)

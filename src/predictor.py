@@ -4,30 +4,6 @@ import cv2
 import numpy as np
 from skimage import io, transform
 
-
-def ellipseParameter(im):
-    # get ellipse parameter
-    img = cv2.resize(im, (540,800))
-    x, y, a, b, theta = 0, 0, 0, 0, 0
-    ret, thresh = cv2.threshold(img, 127, 255, 0)
-    methods = [cv2.CONTOURS_MATCH_I1, cv2.CONTOURS_MATCH_I2]
-    im2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    cnt = contours[0]
-    (xx, yy), (MA, ma), angle = cv2.fitEllipse(cnt)
-    if MA > ma:
-        aa, bb = MA, ma
-        angle = angle
-    else:
-        aa, bb = ma, MA
-        angle = (angle - 90) % 360
-    a += aa / 2
-    b += bb / 2
-    x += xx
-    y += yy
-    theta += angle
-    return (x, y), (a, b), theta
-
-
 def predict(model, path, csv_in, norm):
     # variable for undo normalisation to [-1,1]
     with open(csv_in, "rt") as infile, open(
@@ -37,7 +13,7 @@ def predict(model, path, csv_in, norm):
         # write header
         headers = next(reader, None)
         if headers:
-            writer.writerow(['filename'] + ['center_x_mm'] + ['center_y_mm'] + ['semi_axes_a_mm'] + ['semi_axes_b_mm']
+            writer.writerow(['filename'] + ["pixel size(mm)"] + ['center_x_mm'] + ['center_y_mm'] + ['semi_axes_a_mm'] + ['semi_axes_b_mm']
                             + ['angle_rad'] + ['hc_mm'])
         for row in reader:
             # print('...' + row[0])
@@ -55,18 +31,9 @@ def predict(model, path, csv_in, norm):
             cy = (cy * norm['cy'] + norm['cy'] * norm["scale"])
             sa = (sa * norm['sa'] + norm['sa'] * norm["scale"])
             sb = (sb * norm['sb'] + norm['sb'] * norm["scale"])
-            hc = (hc * norm['hc'] + norm['hc'] * norm["scale"])
-            # # (cx, cy), (sa, sb), angle = ellipseParameter(pimg*255)
-            # import matplotlib.pyplot as plt
-            # from matplotlib.pyplot import Circle
-            # plt.imshow(pimg, cmap='gray')
-            # ax = plt.gca()
-            # ax.add_patch(Circle((cx, cy), radius=5, color='red'))
-            # plt.savefig(os.path.join(path, 'out', img_name))
-            # plt.cla()
 
             angle_rad = np.arctan2(angle_sin, angle_cos)
-            writer.writerow([row[0]] +
+            writer.writerow([row[0]] + [str(pixel_mm)] +
                             [str(round(cx[0][0] * pixel_mm, 9))] +
                             [str(round(cy[0][0] * pixel_mm, 9))] +
                             [str(round(sa[0][0] * pixel_mm, 9))] +
