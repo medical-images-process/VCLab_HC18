@@ -7,10 +7,9 @@ from math import pi, radians, sqrt
 from scipy import ndimage
 
 
-def ellipseParameter(path):
+def ellipseParameter(img):
     # Load image and plot
-    img = cv2.imread(path, 0)
-
+    img[img > 0] = 255
     # get ellipse parameter
     x, y, a, b, theta = 0, 0, 0, 0, 0
     ret, thresh = cv2.threshold(img, 127, 255, 0)
@@ -43,6 +42,23 @@ def circumference(a, b):
 path = os.path.join(os.getcwd(), 'Dataset', 'training')
 
 
+def saveImage(in_path, out_path, x, y, a, b, t):
+    from matplotlib.patches import Ellipse
+    import matplotlib.pyplot as plt
+
+    img = cv2.imread(in_path, 0)
+
+    ells = Ellipse((x, y), a * 2, b * 2, t, edgecolor='red', facecolor='none', )
+    plt.imshow(img, cmap='gray')
+    from matplotlib.pyplot import Circle
+    patches = [ells, Circle((x, y), radius=2, color='red')]
+    ax = plt.gca()
+    for p in patches:
+        ax.add_patch(p)
+    plt.savefig(out_path)
+    plt.cla()
+
+
 def ellipseDistanceTransformation(path):
     # Load image and plot
     img = cv2.imread(path, 0)
@@ -51,7 +67,7 @@ def ellipseDistanceTransformation(path):
     return dist
 
 
-# with open(os.path.join(path, 'training_set_pixel_size_and_HC.csv'), "rt") as infile, open(os.path.join(path, 'training.csv'), "w", newline='') as outfile:
+# with open(os.path.join(path, 'test_set_pixel_size.csv'), "rt") as infile, open(os.path.join(path, 'result.csv'), "w", newline='') as outfile:
 #    reader = csv.reader(infile)
 #    writer = csv.writer(outfile)
 #    # write header
@@ -59,11 +75,13 @@ def ellipseDistanceTransformation(path):
 #    if headers:
 #        writer.writerow(headers + ['center_x_mm'] + ['center_y_mm'] + ['semi_axes_a_mm'] + ['semi_axes_b_mm'] + ['angle_rad'] + ['hc_calc_mm'])
 #    for row in reader:
-#        img_name = row[0].replace('.png', '_Annotation.png')
+#        img_name = row[0].replace('.png', '_Predicted_seg.png')
+#        out_name = row[0].replace('.png', '_Predicted_out.png')
 #        pixel_mm = float(row[1])
-#        (x, y), (a, b), theta = ellipseParameter(os.path.join(path, 'set', img_name))
-#        img_distance = ellipseDistanceTransformation(os.path.join(path, 'set', img_name))
-#        cv2.imwrite(os.path.join(path, 'set', img_name.replace('Annotation', 'DistanceTransform')), img_distance)
+#        (x, y), (a, b), theta = ellipseParameter(os.path.join(path, 'out', img_name))
+#        # img_distance = ellipseDistanceTransformation(os.path.join(path, 'set', img_name))
+#        # cv2.imwrite(os.path.join(path, 'set', img_name.replace('Annotation', 'DistanceTransform')), img_distance)
+#        saveImage(os.path.join(path, 'out', img_name), os.path.join(path, 'out', out_name), x, y, a, b, theta)
 #        writer.writerow(row +
 #                        [str(round(x*pixel_mm,9))] +
 #                        [str(round(y*pixel_mm,9))] +
@@ -73,35 +91,45 @@ def ellipseDistanceTransformation(path):
 #                        [str(round(circumference(a,b)*pixel_mm, 2))])
 
 
+
 import numpy as np
 from matplotlib.patches import Ellipse
 import matplotlib.pyplot as plt
-
+from skimage import transform
 # get ellipse parameters
 pixel_mm = 0.190535875467
 
-img_path = os.path.join(path, 'set', '388_HC_Annotation.png')
-(x, y), (a, b), theta = ellipseParameter(img_path)
-print('x,y: ' + str(x * pixel_mm) + ',' + str(y * pixel_mm) + ' a: ' + str(a * pixel_mm) + ' b: ' + str(
-    b * pixel_mm) + ' theta: ' + str(theta) + ' rad: ' + str(radians(theta)))
-print('hc: ' + str(round(circumference(a, b) * pixel_mm, 2)))
+img_path = os.path.join(path, 'annotation', '380_HC_Annotation.png')
+image_path = os.path.join(path, 'image', '012_HC.png')
+img = cv2.imread(img_path, 0)
+(x, y), (a, b), theta = ellipseParameter(img)
+rimg = cv2.resize(img, (384, 256))
+(xx, yy), (aa, bb), tt = ellipseParameter(rimg)
+
+print('x: ' + str(x / xx) + ' y: ' + str(y / yy) + ' a: ' + str(a / aa) + ' b: ' + str(
+    b /bb) + ' theta: ' + str(theta) + ' tt: ' + str(tt))
+print('hc: ' + str(round(circumference(a, b) / circumference(aa, bb), 2)))
 angles = [theta]
 im = cv2.imread(img_path, 0)
+org_im = cv2.imread(image_path, 0)
 im2 = np.ndarray(im.shape)
 ells = Ellipse((x, y), a * 2, b * 2, theta, edgecolor='red', facecolor='none', )
-fig = plt.figure()
-fig.add_subplot(111)
+ells2 = Ellipse((xx, yy), aa * 2, bb * 2, tt, edgecolor='red', facecolor='none', )
 
-# plt.imshow(im, cmap='gray')
-# ax = plt.gca()
-# ax.add_patch(ells)
-# plt.show()
+plt.imshow(img, cmap='gray')
+from matplotlib.pyplot import Circle
+patches = [ells, ells2, Circle((xx, yy), radius=2, color='red')]
+ax = plt.gca()
+for p in patches:
+    ax.add_patch(p)
+# plt.savefig('testXXX')
+plt.show()
 
 # img_fill_holes = ndimage.binary_fill_holes(im[:,:]).astype(int)
 # plt.imshow(img_fill_holes, cmap='gray')
 # plt.show()
 
-dist = ellipseDistanceTransformation(img_path)
-print(dist)
-plt.imshow(dist, cmap='gray')
-plt.show()
+# dist = ellipseDistanceTransformation(img_path)
+# print(dist)
+# plt.imshow(dist, cmap='gray')
+# plt.show()

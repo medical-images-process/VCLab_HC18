@@ -3,10 +3,11 @@ from models import losses
 from keras import optimizers
 from keras.models import Model
 from keras.utils import multi_gpu_model
-from keras.layers import Input, concatenate, Conv2D, Dense, MaxPooling2D, UpSampling2D, BatchNormalization, LeakyReLU, Dropout
+from keras.layers import Input, concatenate, Conv2D, Dense, MaxPooling2D, UpSampling2D, BatchNormalization, LeakyReLU, \
+    Dropout
 
 
-def create_unet_256x256(input_shape=(256, 256, 1), pooling_mode='avg',
+def create_unet_256x384(input_shape=(256, 384, 1), pooling_mode='avg',
                         num_classes=1):
     inputs = Input(input_shape)
     conv1 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(inputs)
@@ -53,9 +54,54 @@ def create_unet_256x256(input_shape=(256, 256, 1), pooling_mode='avg',
     conv9 = Conv2D(2, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv9)
     conv10 = Conv2D(1, 1, activation='sigmoid')(conv9)
 
-    model = Model(input=inputs, output=conv10)
+    # ###########################################
+    # prediction of ellipse parameters
+    if pooling_mode == 'flatten':
+        from keras.layers import Flatten
+        ep4 = Flatten()(conv5)
+    if pooling_mode == 'avg':
+        from keras.layers import GlobalAveragePooling2D
+        ep4 = GlobalAveragePooling2D()(conv5)
+    if pooling_mode == 'max':
+        from keras.layers import GlobalMaxPooling2D
+        ep4 = GlobalMaxPooling2D()(conv5)
+
+    # ##########
+    ep3 = Dense(128, activation='relu', kernel_initializer='he_normal')(ep4)
+    # ##########
+    ep2 = Dense(512, activation='relu', kernel_initializer='he_normal')(ep3)
+    # ##########
+    ep1 = Dense(256, activation='relu', kernel_initializer='he_normal')(ep2)
+    # ##########
+    ep_center_x = Dense(1, activation='tanh', bias_initializer='he_normal')(ep1)
+    # Output (center_x) -> 1x1
+    # ##########
+    ep_center_y = Dense(1, activation='tanh', bias_initializer='he_normal')(ep1)
+    # Output (center_y) -> 1x1
+    # ##########
+    ep_axis_a = Dense(1, activation='tanh', bias_initializer='he_normal')(ep1)
+    # Output (semi_axis_a) -> 1x1
+    # ##########
+    ep_axis_b = Dense(1, activation='tanh', bias_initializer='he_normal')(ep1)
+    # Output (semi_axis_b) -> 1x1
+    # ##########
+    ep_angle_sin = Dense(1, activation='tanh', bias_initializer='he_normal')(ep1)
+    # Output (angle as sin) -> 1x1
+    # ##########
+    ep_angle_cos = Dense(1, activation='tanh', bias_initializer='he_normal')(ep1)
+    # Output (angle as cos) -> 1x1
+    # ##########
+    ep_hc = Dense(1, activation='tanh', bias_initializer='he_normal')(ep1)
+    # Output (hc) -> 1x1
+    # ##########
+    model = Model(input=inputs,
+                  output=conv10)
+    model = Model(input=inputs,
+                  output=[conv10, ep_center_x, ep_center_y, ep_axis_a, ep_axis_b, ep_angle_sin, ep_angle_cos, ep_hc])
 
     return model
+
+
 # ===========================================================================
 # \brief Symmetric Unet for shapes 800,540 with minimized numbers of parameter
 #
@@ -201,10 +247,11 @@ def create_unet_min_128x192(input_shape=(128, 192, 1), pooling_mode='avg',
 
     return model
 
+
 # ===========================================================================
 # \brief Returns a symmetric Unet model arcitecture
 #
-def get_unet(model_name='unet_opt_512x512', input_shape=(512, 512, 1), pooling_mode='avg', num_classes=1, lr=0.01):
+def get_unet(model_name='unet_256x256', input_shape=(256, 256, 1), pooling_mode='avg', num_classes=1, lr=1e-4):
     print('Create model: ' + model_name)
     model = globals()['create_' + model_name](input_shape=input_shape, pooling_mode=pooling_mode,
                                               num_classes=num_classes)
@@ -219,9 +266,8 @@ def get_unet(model_name='unet_opt_512x512', input_shape=(512, 512, 1), pooling_m
 
     weights = np.ones(1)
     weights[0] = 1
-    weighted_loss = losses.class_weighted_cross_entropy_3(weights)
+    loss = ['binary_crossentropy', 'mse', 'mse', 'mse', 'mse', 'mse', 'mse', 'mse']
 
-    parallel_model.compile(optimizer=optimizers.Adam(lr=1e-4), loss='binary_crossentropy', metrics=['accuracy'])
-
+    parallel_model.compile(optimizer=optimizers.Adam(lr=lr), loss=loss, metrics=['accuracy'])
 
     return model, parallel_model
