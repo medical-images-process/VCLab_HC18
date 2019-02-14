@@ -46,23 +46,24 @@ def predict(model, path, csv_in, norm):
             p = io.imread(os.path.join(os.path.join(path, 'image'), row[0]))
             p = transform.resize(p, (256, 384))
             p = np.expand_dims(np.expand_dims(p, axis=3), axis=0)
+
             pimg, cx, cy, sa, sb, angle_sin, angle_cos, hc = model.predict_on_batch(p)
             pimg = transform.resize(pimg[0, :, :, 0] , (540, 800))
             cv2.imwrite(os.path.join(path, 'out', img_name), pimg * 255)
 
-            # cx = cx * norm['cx'] + norm['cx']
-            # cy = cy * norm['cy'] + norm['cy']
-            # sa = sa * norm['sa'] + norm['sa']
-            # sb = sb * norm['sb'] + norm['sb']
-            # hc = hc * norm['hc'] + norm['hc']
+            cx = (cx * norm['cx'] + norm['cx'] * norm["scale"])
+            cy = (cy * norm['cy'] + norm['cy'] * norm["scale"])
+            sa = (sa * norm['sa'] + norm['sa'] * norm["scale"])
+            sb = (sb * norm['sb'] + norm['sb'] * norm["scale"])
+            hc = (hc * norm['hc'] + norm['hc'] * norm["scale"])
             # # (cx, cy), (sa, sb), angle = ellipseParameter(pimg*255)
-            import matplotlib.pyplot as plt
-            from matplotlib.pyplot import Circle
-            plt.imshow(pimg, cmap='gray')
-            ax = plt.gca()
-            ax.add_patch(Circle((cx, cy), radius=5, color='red'))
-            plt.savefig(os.path.join(path, 'out', img_name))
-            plt.cla()
+            # import matplotlib.pyplot as plt
+            # from matplotlib.pyplot import Circle
+            # plt.imshow(pimg, cmap='gray')
+            # ax = plt.gca()
+            # ax.add_patch(Circle((cx, cy), radius=5, color='red'))
+            # plt.savefig(os.path.join(path, 'out', img_name))
+            # plt.cla()
 
             angle_rad = np.arctan2(angle_sin, angle_cos)
             writer.writerow([row[0]] +
