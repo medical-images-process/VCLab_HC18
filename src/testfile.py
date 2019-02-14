@@ -1,86 +1,39 @@
-from keras.layers import Input, Dense, Conv2D, MaxPooling2D, UpSampling2D
-from keras.models import Model
-from keras import backend as K
-import matplotlib.pyplot as plt
-from keras.utils import multi_gpu_model
-
-input_img = Input(shape=(28, 28, 1))  # adapt this if using `channels_first` image data format
-
-x = Conv2D(16, (3, 3), activation='relu', padding='same')(input_img)
-x = MaxPooling2D((2, 2), padding='same')(x)
-x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
-x = MaxPooling2D((2, 2), padding='same')(x)
-x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
-encoded = MaxPooling2D((2, 2), padding='same')(x)
-
-# at this point the representation is (4, 4, 8) i.e. 128-dimensional
-
-x = Conv2D(8, (3, 3), activation='relu', padding='same')(encoded)
-x = UpSampling2D((2, 2))(x)
-x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
-x = UpSampling2D((2, 2))(x)
-x = Conv2D(16, (3, 3), activation='relu')(x)
-x = UpSampling2D((2, 2))(x)
-decoded = Conv2D(1, (3, 3), activation='sigmoid', padding='same')(x)
-
-model = Model(input_img, decoded)
-
-# parallelize model
-try:
-    parallel_model = multi_gpu_model(model=model, cpu_relocation=False)
-    print("Training using multi GPU...")
-except ValueError:
-    parallel_model = model
-    print("Training using single GPU oder CPU...")
-
-parallel_model.compile(optimizer='adadelta', loss='binary_crossentropy')
-
-#########################################################################
-from keras.datasets import mnist
-import numpy as np
 import os
-model_path = os.path.join(os.getcwd(),
-                              'saved_models/' + 'trained_model_mnist' + '.h5')
-train = False
+import csv
+import cv2
+import numpy as np
+from skimage import io, transform
 
-(x_train, _), (x_test, _) = mnist.load_data()
+path = os.path.join(os.getcwd(), "Dataset", "test")
+csv_in = os.path.join(path, 'result.csv')
 
-x_train = x_train.astype('float32') / 255.
-x_test = x_test.astype('float32') / 255.
-x_train = np.reshape(x_train, (len(x_train), 28, 28, 1))  # adapt this if using `channels_first` image data format
-x_test = np.reshape(x_test, (len(x_test), 28, 28, 1))  # adapt this if using `channels_first` image data format
+with open(csv_in, "rt") as infile:
+    reader = csv.reader(infile)
+    # write header
+    headers = next(reader, None)
+    for row in reader:
+        # print('...' + row[0])
+        pixel_mm = float(row[1])
+        img_name = row[0]
+        p = io.imread(os.path.join(os.path.join(path, 'image'), row[0]))
 
-model.load_weights(model_path)
 
-if train:
-    from keras.callbacks import TensorBoard
+        cx = float(row[2]) / pixel_mm
+        cy = float(row[3]) / pixel_mm
+        sa = float(row[4]) / pixel_mm
+        sb = float(row[5]) / pixel_mm
+        an = float(row[6])
+        hc = float(row[7]) / pixel_mm
 
-    parallel_model.fit(x_train, x_train,
-                    epochs=50,
-                    batch_size=128,
-                    shuffle=True,
-                    validation_data=(x_test, x_test),
-                    callbacks=[TensorBoard(log_dir='/tmp/autoencoder')])
+        import matplotlib.pyplot as plt
+        from matplotlib.pyplot import Circle
+        from matplotlib.patches import Ellipse
 
-    model.save(model_path)
-    print("Model saved to disk")
-
-decoded_imgs = parallel_model.predict(x_test)
-
-n = 10  # how many digits we will display
-plt.figure(figsize=(20, 4))
-for i in range(n):
-    # display original
-    ax = plt.subplot(2, n, i + 1)
-    plt.imshow(x_test[i].reshape(28, 28))
-    plt.gray()
-    ax.get_xaxis().set_visible(False)
-    ax.get_yaxis().set_visible(False)
-
-    # display reconstruction
-    ax = plt.subplot(2, n, i + 1 + n)
-    plt.imshow(decoded_imgs[i].reshape(28, 28))
-    plt.gray()
-    ax.get_xaxis().set_visible(False)
-    ax.get_yaxis().set_visible(False)
-plt.show()
+        plt.imshow(p, cmap='gray')
+        ax = plt.gca()
+        ells = Ellipse((cx, cy), sa, sb, an, edgecolor='red', facecolor='none', )
+        mid = Circle((cx, cy), radius=5, color='red')
+        ax.add_patch(ells)
+        ax.add_patch(mid)
+        plt.savefig(os.path.join(path, 'out', img_name))
+        plt.cla()
